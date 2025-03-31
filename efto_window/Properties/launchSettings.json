@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "efto_window (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "efto_window (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

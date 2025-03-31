@@ -1,0 +1,49 @@
+﻿<Window x:Class="efto_menu.Views.Menu"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:efto_menu.Views"
+        mc:Ignorable="d"
+        Title="Menu"
+        Icon="/Resources/EFT.png"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True">
+
+    <!--#region Dictionary Resources-->
+    <Window.Resources>
+        <ResourceDictionary Source="/Views/Resource Dictionaries/Main_Styles.xaml"/>
+    </Window.Resources>
+    <!--#endregion-->
+
+    <Grid Background="Transparent">
+        <!--#region Menu Buttons-->
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+
+            <Button Style="{StaticResource Main_Button}"
+                     Tag="/Resources/EFT.png"
+                     Click="MapTab_Click"/>
+
+            <Button Style="{StaticResource Main_Button}"
+                     Tag="/Resources/Key.png"
+                     Click="SearchTab_Click"/>
+
+            <Button Style="{StaticResource Main_Button}"
+                     Tag="/Resources/Key.png"
+                     Click="BrowserTab_Click"/>
+
+            <Button Style="{StaticResource Main_Button}"
+                     Tag="/Resources/Keybind.png"
+                     Click="KeybindTab_Click"/>
+
+            <Button Style="{StaticResource Main_Button}"
+                     Tag="/Resources/Setting.png"
+                     Click="SettingTab_Click"/>
+
+        </StackPanel>
+        <!--#endregion-->
+    </Grid>
+</Window>

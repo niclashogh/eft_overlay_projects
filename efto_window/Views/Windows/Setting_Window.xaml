@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="efto_window.Views.Windows.Setting_Window"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:efto_window.Views.Windows"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Setting Window">
+
+    <Grid x:Name="ParentGrid">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--#region Content-->
+        <Image Source="/Assets/Backgrounds/Settings.png"
+           Stretch="UniformToFill"
+           Grid.RowSpan="2"/>
+
+        <Frame x:Name="ContentFrame"
+           Grid.Row="1"/>
+        <!--#endregion-->
+
+        <!--#region Menu-->
+        <AppBarButton x:Name="MenuBtn"
+                  Click="MenuBtn_Click"
+                  Style="{StaticResource Default_AppBarButton}"
+                  Grid.Row="0"/>
+
+        <SplitView x:Name="MenuSplitView"
+               Style="{StaticResource Default_SplitView}"
+               Grid.RowSpan="2">
+
+            <SplitView.Pane>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <ListBox ItemsSource="{Binding Pages}"
+                         SelectionChanged="SplitViewMenu_SelectionChanged"
+                         Grid.Row="0">
+
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Title}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+
+                    </ListBox>
+
+                    <StackPanel Orientation="Vertical"
+                            Grid.Row="1">
+
+                        <TextBox Text="{Binding MetaData.Creator}"
+                             IsEnabled="False"/>
+
+                        <TextBox Text="{Binding MetaData.Version}"
+                             IsEnabled="False"/>
+
+                        <TextBox Text="{Binding MetaData.UpdatedToGameVersion}"
+                             IsEnabled="False"/>
+                    </StackPanel>
+                </Grid>
+
+            </SplitView.Pane>
+
+        </SplitView>
+        <!--#endregion-->
+
+    </Grid>
+</Window>
