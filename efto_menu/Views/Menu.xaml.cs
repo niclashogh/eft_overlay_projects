@@ -1,16 +1,17 @@
 ﻿using efto_menu.ViewModels;
+using efto_model.Models.Enums;
 using System.Windows;
 
 namespace efto_menu.Views
 {
     public partial class Menu : Window
     {
-        private MenuVM ViewModel { get; set; } = new();
+        private MenuVM viewModel { get; set; } = new();
 
         public Menu()
         {
             InitializeComponent();
-            this.DataContext = ViewModel;
+            this.DataContext = this.viewModel;
 
             this.Height = SystemParameters.PrimaryScreenHeight;
             this.MaxWidth = 50;
@@ -18,30 +19,14 @@ namespace efto_menu.Views
             this.Top = 0;
         }
 
-        private void MapTab_Click(object sender, RoutedEventArgs e)
-        {
-            // Open Window
-        }
+        private void MapTab_Click(object sender, RoutedEventArgs e) => this.viewModel.SendCom(InterProcessComs.Map);
 
-        private void SearchTab_Click(object sender, RoutedEventArgs e)
-        {
-            // Open Window
-        }
+        private void SearchTab_Click(object sender, RoutedEventArgs e) => this.viewModel.SendCom(InterProcessComs.Search);
 
-        private void KeybindTab_Click(object sender, RoutedEventArgs e)
-        {
-            // Open Window
-        }
+        private void SettingTab_Click(object sender, RoutedEventArgs e) => this.viewModel.SendCom(InterProcessComs.Setting);
 
+        private void BrowserTab_Click(object sender, RoutedEventArgs e) => this.viewModel.SendCom(InterProcessComs.Browser);
 
-        private void SettingTab_Click(object sender, RoutedEventArgs e)
-        {
-            // Open Window
-        }
-
-        private void BrowserTab_Click(object sender, RoutedEventArgs e)
-        {
-            // Open Window
-        }
+        private void CloseApp_Click(object sender, RoutedEventArgs e) => this.viewModel.SendCom(InterProcessComs.Close);
     }
 }

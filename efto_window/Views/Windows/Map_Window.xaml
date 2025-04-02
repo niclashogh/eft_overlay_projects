@@ -6,10 +6,75 @@
     xmlns:local="using:efto_window.Views.Windows"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:efto_window.Views.Converters"
     mc:Ignorable="d"
-    Title="Map Window">
+    Title="Map">
+    
+    <Grid x:Name="PARENT_GRID">
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="/Views/ResourceDictionaries/WindowMenu.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
 
-    <Grid>
+                <converters:TextReplaceUnderscore x:Key="TextReplaceUnderScore"/>
+            </ResourceDictionary>
+        </Grid.Resources>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Name="CONTENT_GRID"
+              Grid.Row="1"/>
+
+        <!--#region Menu-->
+        <AppBarButton Click="Menu_Btn_Click"
+                      Style="{StaticResource WINDOW_MENU_BTN}"
+                      Grid.Row="0"/>
+
+        <SplitView x:Name="MENU_SPLITVIEW"
+                   Style="{StaticResource WINDOW_MENU_PANE}"
+                   Grid.RowSpan="2">
+
+            <SplitView.Pane>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <ListBox ItemsSource="{Binding MapList}"
+                             SelectedItem="{Binding SelectedMap}"
+                             Grid.Row="0">
+
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Mode=OneWay, Converter={StaticResource TextReplaceUnderScore}}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+
+                    </ListBox>
+
+                    <StackPanel Orientation="Vertical"
+                                Grid.Row="1">
+
+                        <TextBox Text="{Binding MetaData.Creator}"
+                                 IsEnabled="False"/>
+
+                        <TextBox Text="{Binding MetaData.Version}"
+                                 IsEnabled="False"/>
+
+                        <TextBox Text="{Binding MetaData.UpdatedToGameVersion}"
+                                 IsEnabled="False"/>
+                    </StackPanel>
+                </Grid>
+
+            </SplitView.Pane>
+
+        </SplitView>
+        <!--#endregion-->
 
     </Grid>
 </Window>

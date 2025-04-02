@@ -40,7 +40,6 @@ namespace efto_model.Services
                 {
                     Quest_Table quest = new(database);
                     Marker_Table marker = new(database);
-                    Keybind_Table keybind = new(database);
                 }
             }
         }

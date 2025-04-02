@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace efto_window.ViewModels.Windows
 {
-    public class BrowserVM : BaseVM
+    public class BrowserVM : WindowVM
     {
 
     }

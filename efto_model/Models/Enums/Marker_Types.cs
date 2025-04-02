@@ -3,6 +3,7 @@
     public enum Marker_Types
     {
         Rectangle,
-        Ellipse
+        Ellipse,
+        Icon
     }
 }

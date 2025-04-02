@@ -7,33 +7,37 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Setting Window">
+    Title="Settings">
 
-    <Grid x:Name="ParentGrid">
-
+    <Grid x:Name="PARENT_GRID">
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="/Views/ResourceDictionaries/WindowMenu.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </Grid.Resources>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="45"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--#region Content-->
         <Image Source="/Assets/Backgrounds/Settings.png"
-           Stretch="UniformToFill"
-           Grid.RowSpan="2"/>
+               Stretch="UniformToFill"
+               Grid.RowSpan="2"/>
 
-        <Frame x:Name="ContentFrame"
-           Grid.Row="1"/>
-        <!--#endregion-->
+        <Frame x:Name="CONTENT_FRAME"
+               Grid.Row="1"/>
 
         <!--#region Menu-->
-        <AppBarButton x:Name="MenuBtn"
-                  Click="MenuBtn_Click"
-                  Style="{StaticResource Default_AppBarButton}"
-                  Grid.Row="0"/>
+        <AppBarButton Click="Menu_Btn_Click"
+                      Style="{StaticResource WINDOW_MENU_BTN}"
+                      Grid.Row="0"/>
 
-        <SplitView x:Name="MenuSplitView"
-               Style="{StaticResource Default_SplitView}"
-               Grid.RowSpan="2">
+        <SplitView x:Name="MENU_SPLITVIEW"
+                   Style="{StaticResource WINDOW_MENU_PANE}"
+                   Grid.RowSpan="2">
 
             <SplitView.Pane>
                 <Grid>
@@ -42,9 +46,9 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <ListBox ItemsSource="{Binding Pages}"
-                         SelectionChanged="SplitViewMenu_SelectionChanged"
-                         Grid.Row="0">
+                    <ListBox ItemsSource="{Binding Pages, Mode=OneWay}"
+                             SelectionChanged="Menu_SelectionChanged"
+                             Grid.Row="0">
 
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -55,16 +59,16 @@
                     </ListBox>
 
                     <StackPanel Orientation="Vertical"
-                            Grid.Row="1">
+                                Grid.Row="1">
 
                         <TextBox Text="{Binding MetaData.Creator}"
-                             IsEnabled="False"/>
+                                 IsEnabled="False"/>
 
                         <TextBox Text="{Binding MetaData.Version}"
-                             IsEnabled="False"/>
+                                 IsEnabled="False"/>
 
                         <TextBox Text="{Binding MetaData.UpdatedToGameVersion}"
-                             IsEnabled="False"/>
+                                 IsEnabled="False"/>
                     </StackPanel>
                 </Grid>
 

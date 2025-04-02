@@ -8,14 +8,11 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
-                
                 <!-- Other merged dictionaries here -->
-                <ResourceDictionary Source="/Views/Resource Dictionaries/DefaultMenu.xaml"/>
 
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
-            
-            
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

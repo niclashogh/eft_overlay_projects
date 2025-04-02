@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using efto_model.Models.Enums;
+using System.Drawing;
 
 namespace efto_model.Models.DataTransferObjects
 {
@@ -9,20 +10,20 @@ namespace efto_model.Models.DataTransferObjects
 
     public readonly record struct ViewRecord<T>(T View, string Title);
 
-    public readonly record struct ColorPalette()
+    public readonly record struct PaletteRecord()
     {
-        public List<Color> Palette { get; } = new List<Color>
+        public Dictionary<Palette, Color> Dictionary { get; } = new Dictionary<Palette, Color>
         {
-            Color.White,
-            Color.FromArgb(55, 84, 169),
-            Color.FromArgb(169, 55, 55),
-            Color.FromArgb(92, 120, 91),
-            Color.FromArgb(180, 123, 38),
-            Color.FromArgb(76, 69, 140),
-            Color.FromArgb(169, 160, 55),
-            Color.FromArgb(35, 160, 141),
-            Color.FromArgb(160, 18, 132),
-            Color.FromArgb(84, 67, 47)
+            { Palette.White, Color.White },
+            { Palette.Blue, Color.FromArgb(55, 84, 169) },
+            { Palette.Red, Color.FromArgb(169, 55, 55) },
+            { Palette.Green, Color.FromArgb(92, 120, 91) },
+            { Palette.Orange, Color.FromArgb(180, 123, 38) },
+            { Palette.Purple, Color.FromArgb(76, 69, 140) },
+            { Palette.Yellow, Color.FromArgb(169, 160, 55) },
+            { Palette.Teal, Color.FromArgb(35, 160, 141) },
+            { Palette.Magenta, Color.FromArgb(160, 18, 132) },
+            { Palette.Brown, Color.FromArgb(84, 67, 47) }
         };
     }
 }

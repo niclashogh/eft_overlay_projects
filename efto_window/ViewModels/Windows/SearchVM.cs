@@ -8,7 +8,7 @@ using efto_model.Repositories;
 
 namespace efto_window.ViewModels.Windows
 {
-    public class SearchVM : BaseVM
+    public class SearchVM : WindowVM
     {
         private Quest_Repo questRepository = new();
         private AccessKey_Repo accessKeyRepository = new();

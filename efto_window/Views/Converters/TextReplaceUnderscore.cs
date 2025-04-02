@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Data;
+﻿using efto_model.Models.Enums;
+using Microsoft.UI.Xaml.Data;
 using System;
 
 namespace efto_window.Views.Converters
@@ -7,7 +8,7 @@ namespace efto_window.Views.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is string)
+            if (value is Maps || value is Traders)
             {
                 string? text = value.ToString();
 

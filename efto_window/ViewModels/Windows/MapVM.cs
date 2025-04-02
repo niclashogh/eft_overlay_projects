@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ using efto_model.Repositories;
 
 namespace efto_window.ViewModels.Windows
 {
-    public class MapVM : BaseVM
+    public class MapVM : WindowVM
     {
         private Extraction_Repo extractionRepository = new();
         private Extraction_Requirement_Repo extractionRequirementRepository = new();
@@ -21,11 +22,11 @@ namespace efto_window.ViewModels.Windows
         private ObservableCollection<Extraction_DTO>? extractions;
         public ObservableCollection<Extraction_DTO>? Extractions
         {
-            get { return extractions; }
+            get { return this.extractions; }
             private set
             {
-                extractions = value;
-                OnPropertyChanged(nameof(Extractions));
+                this.extractions = value;
+                OnPropertyChanged(nameof(this.Extractions));
             }
         }
         #endregion
@@ -34,11 +35,11 @@ namespace efto_window.ViewModels.Windows
         private ObservableCollection<Quest_Task>? tasks;
         public ObservableCollection<Quest_Task>? Tasks
         {
-            get { return tasks; }
+            get { return this.tasks; }
             private set
             {
-                value = tasks;
-                OnPropertyChanged(nameof(Tasks));
+                value = this.tasks;
+                OnPropertyChanged(nameof(this.Tasks));
             }
         }
         #endregion
@@ -47,11 +48,11 @@ namespace efto_window.ViewModels.Windows
         private ObservableCollection<BTR>? btr;
         public ObservableCollection<BTR>? BTR
         {
-            get { return btr; }
+            get { return this.btr; }
             private set
             {
-                value = btr;
-                OnPropertyChanged(nameof(BTR));
+                value = this.btr;
+                OnPropertyChanged(nameof(this.BTR));
             }
         }
         #endregion
@@ -60,38 +61,48 @@ namespace efto_window.ViewModels.Windows
         private ObservableCollection<Marker>? markers;
         public ObservableCollection<Marker>? Markers
         {
-            get { return markers; }
+            get { return this.markers; }
             private set
             {
-                markers = value;
-                OnPropertyChanged(nameof(Markers));
+                this.markers = value;
+                OnPropertyChanged(nameof(this.Markers));
             }
         }
         #endregion
 
-        public ColorPalette Palette = new();
-        public Maps SelectedMap { get; private set; }
+        public PaletteRecord Colors = new();
 
-        public MapVM(Maps map = 0)
+        public List<Maps> MapList { get; } = new(Enum.GetValues<Maps>());
+        private Maps selectedMap = 0;
+        public Maps SelectedMap
         {
-            this.SelectedMap = map;
+            get { return this.selectedMap; }
+            private set
+            {
+                this.selectedMap = value;
+                OnPropertyChanged(nameof(this.SelectedMap));
+                // Reload
+            }
+        }
 
-            _ = LoadExtractions();
-            _ = LoadQuestTasks();
-            _ = LoadBTR();
-            _ = LoadMarkers();
+        public MapVM() // Make references to kill the threads if they still are running and SelectedMap changes?
+        {
+            //_ = LoadExtractions();
+            //_ = LoadQuestTasks();
+            //_ = LoadBTR();
+            //_ = LoadMarkers();
         }
 
         #region Extraction Controls
         internal async Task LoadExtractions()
         {
-            Extractions = await extractionRepository.LoadFromMap<Extraction_DTO>(this.SelectedMap);
+            this.Extractions = await this.extractionRepository.LoadFromMap<Extraction_DTO>(this.SelectedMap);
 
-            if (Extractions != null && Extractions.Any())
+            if (this.Extractions != null && this.Extractions.Any())
             {
-                IEnumerable<Task> enumerateTask = Extractions.Select(async extraction =>
+                IEnumerable<Task> enumerateTask = this.Extractions.Select(async extraction =>
                 {
-                    extraction.Requirements = await extractionRequirementRepository.LoadFromExtraction(extraction.Id);
+                    extraction.Requirements = await this.extractionRequirementRepository.LoadFromExtraction(extraction.Id);
                 });
 
                 await Task.WhenAll(enumerateTask);
@@ -100,81 +111,81 @@ namespace efto_window.ViewModels.Windows
 
         internal async Task UpdateExtraction(Extraction selected)
         {
-            if (selected != null && selected.Id! <= 0 && Extractions != null)
+            if (selected != null && selected.Id! <= 0 && this.Extractions != null)
             {
-                await extractionRepository.UpdateCoordinates(selected);
+                await this.extractionRepository.UpdateCoordinates(selected);
 
-                Extraction_DTO? old = Extractions.FirstOrDefault(sorting => sorting.Id == selected.Id);
+                Extraction_DTO? old = this.Extractions.FirstOrDefault(sorting => sorting.Id == selected.Id);
 
                 if (old != null)
                 {
-                    int index = Extractions.IndexOf(old);
+                    int index = this.Extractions.IndexOf(old);
 
-                    Extractions[index] = await extractionRepository.LoadSingle<Extraction_DTO>(old.Id);
-                    OnPropertyChanged(nameof(Extractions));
+                    this.Extractions[index] = await this.extractionRepository.LoadSingle<Extraction_DTO>(old.Id);
+                    OnPropertyChanged(nameof(this.Extractions));
                 }
             }
         }
         #endregion
 
         #region QuestTask Controls
-        internal async Task LoadQuestTasks() => Tasks = await questTaskRepository.LoadActiveFromMap(this.SelectedMap);
+        internal async Task LoadQuestTasks() => this.Tasks = await this.questTaskRepository.LoadActiveFromMap(this.SelectedMap);
 
         internal async Task UpdateQuestTask(Quest_Task selected)
         {
-            if (selected != null && selected.Id! <= 0 && Tasks != null)
+            if (selected != null && selected.Id! <= 0 && this.Tasks != null)
             {
-                await questTaskRepository.UpdateCoordiantes(selected);
+                await this.questTaskRepository.UpdateCoordiantes(selected);
 
-                Quest_Task? old = Tasks.FirstOrDefault(sorting => sorting.Id == selected.Id);
+                Quest_Task? old = this.Tasks.FirstOrDefault(sorting => sorting.Id == selected.Id);
 
                 if (old != null)
                 {
-                    int index = Tasks.IndexOf(old);
+                    int index = this.Tasks.IndexOf(old);
 
-                    Tasks[index] = await questTaskRepository.LoadSingle(selected.Id);
+                    this.Tasks[index] = await this.questTaskRepository.LoadSingle(selected.Id);
                 }
             }
         }
         #endregion
 
         #region BTR Controls
-        internal async Task LoadBTR() => await btrRepository.LoadFromMap(this.SelectedMap);
+        internal async Task LoadBTR() => await this.btrRepository.LoadFromMap(this.SelectedMap);
 
         internal async Task UpdateBTR(BTR selected)
         {
             if (selected != null && selected.Id! <= 0)
             {
-                await btrRepository.UpdateCoordinates(selected);
+                await this.btrRepository.UpdateCoordinates(selected);
 
-                BTR? old = BTR.FirstOrDefault(sorting => sorting.Id == selected.Id);
+                BTR? old = this.BTR.FirstOrDefault(sorting => sorting.Id == selected.Id);
 
                 if (old != null)
                 {
-                    int index = BTR.IndexOf(old);
+                    int index = this.BTR.IndexOf(old);
 
-                    BTR[index] = await btrRepository.LoadSingle(old.Id);
+                    this.BTR[index] = await this.btrRepository.LoadSingle(old.Id);
                 }
             }
         }
         #endregion
 
         #region Marker Controls
-        internal async Task LoadMarkers() => await markerRepository.LoadFromMap(this.SelectedMap);
+        internal async Task LoadMarkers() => await this.markerRepository.LoadFromMap(this.SelectedMap);
 
         internal async Task UpdateMarkerCoordinates(Marker selected)
         {
             if (selected != null && selected.Id! <= 0)
             {
-                await markerRepository.UpdateCoordinates(selected);
+                await this.markerRepository.UpdateCoordinates(selected);
 
-                Marker? old = Markers.FirstOrDefault(sorting => sorting.Id == selected.Id);
+                Marker? old = this.Markers.FirstOrDefault(sorting => sorting.Id == selected.Id);
 
                 if (old != null)
                 {
-                    int index = Markers.IndexOf(old);
+                    int index = this.Markers.IndexOf(old);
 
-                    Markers[index] = await markerRepository.LoadSingle(selected.Id);
+                    this.Markers[index] = await this.markerRepository.LoadSingle(selected.Id);
                 }
             }
         }
@@ -183,15 +194,15 @@ namespace efto_window.ViewModels.Windows
         {
             if (selected != null && selected.Id! <= 0)
             {
-                await markerRepository.UpdateSize(selected);
+                await this.markerRepository.UpdateSize(selected);
 
-                Marker? old = Markers.FirstOrDefault(sorting => sorting.Id == selected.Id);
+                Marker? old = this.Markers.FirstOrDefault(sorting => sorting.Id == selected.Id);
 
                 if (old != null)
                 {
-                    int index = Markers.IndexOf(old);
+                    int index = this.Markers.IndexOf(old);
 
-                    Markers[index] = await markerRepository.LoadSingle(selected.Id);
+                    this.Markers[index] = await this.markerRepository.LoadSingle(selected.Id);
                 }
             }
         }

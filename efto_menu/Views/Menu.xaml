@@ -36,10 +36,6 @@
                      Click="BrowserTab_Click"/>
 
             <Button Style="{StaticResource Main_Button}"
-                     Tag="/Resources/Keybind.png"
-                     Click="KeybindTab_Click"/>
-
-            <Button Style="{StaticResource Main_Button}"
                      Tag="/Resources/Setting.png"
                      Click="SettingTab_Click"/>
 

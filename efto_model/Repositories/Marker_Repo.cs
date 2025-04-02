@@ -14,8 +14,8 @@ namespace efto_model.Repositories
             {
                 using (SQLiteConnection db = SQLConnection(UserDB))
                 {
-                    string insertQuery = $"INSERT INTO Marker (DP, Map, Type, GroupId, Desc, Width, Height, X, Y) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                    db.Execute(insertQuery, model.DP, model.Map, model.Type, model.GroupId, model.Desc, model.Width, model.Height, model.X, model.Y);
+                    string insertQuery = $"INSERT INTO Marker (Name, Desc, DP, Map, Type, Color, Width, Height, X, Y) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    db.Execute(insertQuery, model.Name, model.Desc, model.DP, model.Map, model.Type, model.Color, model.Width, model.Height, model.X, model.Y);
                 }
 
                 return true;
@@ -90,8 +90,8 @@ namespace efto_model.Repositories
             {
                 using (SQLiteConnection db = SQLConnection(UserDB))
                 {
-                    string updateQuery = $"UPDATE Marker SET DP = ?, Map = ?, Type = ?, GroupId = ?, Desc = ? WHERE Id = ?";
-                    db.Execute(updateQuery, model.DP, model.Map, model.Type, model.GroupId, model.Desc, model.Id);
+                    string updateQuery = $"UPDATE Marker SET Name = ?, Desc = ?, DP = ?, Map = ?, Type = ?, Color = ? WHERE Id = ?";
+                    db.Execute(updateQuery, model.Name, model.Desc, model.DP, model.Map, model.Type, model.Color, model.Id);
                 }
 
                 return true;

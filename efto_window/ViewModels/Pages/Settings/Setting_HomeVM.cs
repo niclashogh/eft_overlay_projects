@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace efto_window.ViewModels.Pages.Settings
 {
-    public class Setting_HomeVM : BaseVM
+    public class Setting_HomeVM : PageVM
     {
 
         public Setting_HomeVM()

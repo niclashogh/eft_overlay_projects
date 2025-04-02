@@ -10,11 +10,12 @@ namespace efto_model.Data.Tables
             {
                 db.Execute(@"CREATE TABLE IF NOT EXISTS Marker (
                             Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            Name VARCHAR(40) NOT NULL,
+                            Desc VARCHAR(200) NOT NULL,
                             DP TINYINT NOT NULL,
                             Map TINYINT NOT NULL,
                             Type TINYINT NOT NULL,
-                            GroupId INT NOT NULL,
-                            Desc VARCHAR(40) NOT NULL,
+                            Color TINYINT NOT NULL,
                             Width DOUBLE NOT NULL,
                             Height DOUBLE NOT NULL,
                             X DOUBLE NOT NULL,
