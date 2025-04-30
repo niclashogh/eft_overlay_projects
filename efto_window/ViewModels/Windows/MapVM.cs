@@ -19,6 +19,8 @@ namespace efto_window.ViewModels.Windows
         private Marker_Repo markerRepository = new();
 
         #region [Extraction] Variables & Properties
+        public bool FinishedLoadingExtractions { get; private set; } = false;
+
         private ObservableCollection<Extraction_DTO>? extractions;
         public ObservableCollection<Extraction_DTO>? Extractions
         {
@@ -32,6 +34,8 @@ namespace efto_window.ViewModels.Windows
         #endregion
 
         #region [Quest, Task] Variables & Properties
+        public bool FinishedLoadingTasks { get; private set; } = false;
+
         private ObservableCollection<Quest_Task>? tasks;
         public ObservableCollection<Quest_Task>? Tasks
         {
@@ -45,6 +49,8 @@ namespace efto_window.ViewModels.Windows
         #endregion
 
         #region [BTR] Variables & Properties
+        public bool FinishedLoadingBTR { get; private set; } = false;
+
         private ObservableCollection<BTR>? btr;
         public ObservableCollection<BTR>? BTR
         {
@@ -58,6 +64,8 @@ namespace efto_window.ViewModels.Windows
         #endregion
 
         #region [Marker] Variables & Properties
+        public bool FinishedLoadingMarkers { get; private set; } = false;
+
         private ObservableCollection<Marker>? markers;
         public ObservableCollection<Marker>? Markers
         {
@@ -70,9 +78,7 @@ namespace efto_window.ViewModels.Windows
         }
         #endregion
 
-        public PaletteRecord Colors = new();
-
-        public List<Maps> MapList { get; } = new(Enum.GetValues<Maps>());
+        public List<Maps> Maps { get; } = new(Enum.GetValues<Maps>());
         private Maps selectedMap = 0;
         public Maps SelectedMap
         {
@@ -81,16 +87,35 @@ namespace efto_window.ViewModels.Windows
             {
                 this.selectedMap = value;
                 OnPropertyChanged(nameof(this.SelectedMap));
-                // Reload
+
+                _ = ResetCollections();
             }
         }
 
         public MapVM() // Make references to kill the threads if they still are running and SelectedMap changes?
         {
-            //_ = LoadExtractions();
-            //_ = LoadQuestTasks();
-            //_ = LoadBTR();
-            //_ = LoadMarkers();
+            _ = LoadExtractions();
+            _ = LoadQuestTasks();
+            _ = LoadBTR();
+            _ = LoadMarkers();
+        }
+
+        private async Task ResetCollections()
+        {
+            this.FinishedLoadingExtractions = false;
+            this.FinishedLoadingTasks = false;
+            this.FinishedLoadingBTR = false;
+            this.FinishedLoadingMarkers = false;
+
+            //this.Extractions = new();
+            //this.Tasks = new();
+            //this.BTR = new();
+            //this.Markers = new();
+
+            _ = LoadExtractions();
+            _ = LoadQuestTasks();
+            _ = LoadBTR();
+            _ = LoadMarkers();
         }
 
         #region Extraction Controls
@@ -106,6 +131,7 @@ namespace efto_window.ViewModels.Windows
                 });
 
                 await Task.WhenAll(enumerateTask);
+                this.FinishedLoadingExtractions = true;
             }
         }
 
@@ -129,7 +155,11 @@ namespace efto_window.ViewModels.Windows
         #endregion
 
         #region QuestTask Controls
-        internal async Task LoadQuestTasks() => this.Tasks = await this.questTaskRepository.LoadActiveFromMap(this.SelectedMap);
+        internal async Task LoadQuestTasks()
+        {
+            this.Tasks = await this.questTaskRepository.LoadActiveFromMap(this.SelectedMap);
+            this.FinishedLoadingTasks = true;
+        }
 
         internal async Task UpdateQuestTask(Quest_Task selected)
         {
@@ -150,7 +180,11 @@ namespace efto_window.ViewModels.Windows
         #endregion
 
         #region BTR Controls
-        internal async Task LoadBTR() => await this.btrRepository.LoadFromMap(this.SelectedMap);
+        internal async Task LoadBTR()
+        {
+            this.BTR = await this.btrRepository.LoadFromMap(this.SelectedMap);
+            this.FinishedLoadingBTR = true;
+        }
 
         internal async Task UpdateBTR(BTR selected)
         {
@@ -171,7 +205,11 @@ namespace efto_window.ViewModels.Windows
         #endregion
 
         #region Marker Controls
-        internal async Task LoadMarkers() => await this.markerRepository.LoadFromMap(this.SelectedMap);
+        internal async Task LoadMarkers()
+        {
+            this.Markers = await this.markerRepository.LoadFromMap(this.SelectedMap);
+            this.FinishedLoadingMarkers = true;
+        }
 
         internal async Task UpdateMarkerCoordinates(Marker selected)
         {

@@ -16,9 +16,9 @@ namespace efto_window.Views.Converters
                 {
                     return text.Replace('_', ' ');
                 }
-                else throw new Exception("[TextReplaceUnderscore] Bindable Value is null or empty");
+                else throw new Exception("[TextReplaceUnderscore] BindableValue is null or empty");
             }
-            else throw new Exception("[TextReplaceUnderscore] Bindable Value not regonized as an string");
+            else throw new Exception("[TextReplaceUnderscore] BindableValue not regonized as Map or Trader");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

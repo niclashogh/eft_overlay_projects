@@ -41,7 +41,7 @@ namespace efto_window
             this.hiddenWindow = new Window
             {
                 Title = "Hidden Window",
-            }; // Force-loading the app, when every other window are closed.
+            }; // Force-loading the app, when every other window is closed.
         }
         #endregion
 

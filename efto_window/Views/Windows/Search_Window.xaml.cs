@@ -20,7 +20,7 @@ namespace efto_window.Views.Windows
 {
     public sealed partial class Search_Window : Window
     {
-        private SearchVM searchVM { get; set; } = new();
+        private SearchVM viewModel { get; set; } = new();
         private WindowController controller;
 
         public Search_Window()

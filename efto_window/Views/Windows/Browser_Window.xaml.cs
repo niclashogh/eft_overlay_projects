@@ -21,7 +21,7 @@ namespace efto_window.Views.Windows
 {
     public sealed partial class Browser_Window : Window
     {
-        private BrowserVM browserVM { get; set; } = new();
+        private BrowserVM viewModel { get; set; } = new();
         private WindowController controller;
 
         public Browser_Window()

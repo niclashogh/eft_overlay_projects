@@ -18,6 +18,7 @@
                 </ResourceDictionary.MergedDictionaries>
 
                 <converters:TextReplaceUnderscore x:Key="TextReplaceUnderScore"/>
+                <converters:ImageSourceConverter x:Key="ImageSourceConverter"/>
             </ResourceDictionary>
         </Grid.Resources>
         
@@ -25,9 +26,25 @@
             <RowDefinition Height="45"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
+        <!--#region Content-->
+        <Canvas x:Name="MAP_OUTER_CANVAS"
+                Grid.RowSpan="2">
 
-        <Grid Name="CONTENT_GRID"
-              Grid.Row="1"/>
+            <Canvas x:Name="MAP_INNER_CANVAS">
+                <Canvas.RenderTransform>
+                    <CompositeTransform x:Name="MAP_TRANSFORM"
+                                        ScaleX="1"
+                                        ScaleY="1"
+                                        TranslateX="0"
+                                        TranslateY="0"/>
+                </Canvas.RenderTransform>
+
+                <Image x:Name="MAP_IMAGE"
+                       Source="{Binding SelectedMap, Mode=OneWay, Converter={StaticResource ImageSourceConverter}, ConverterParameter='/Assets/Maps/'}"/>
+            </Canvas>
+        </Canvas>
+        <!--#endregion-->
 
         <!--#region Menu-->
         <AppBarButton Click="Menu_Btn_Click"
@@ -45,8 +62,8 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <ListBox ItemsSource="{Binding MapList}"
-                             SelectedItem="{Binding SelectedMap}"
+                    <ListBox ItemsSource="{Binding Maps, Mode=OneTime}"
+                             SelectedItem="{Binding SelectedMap, Mode=TwoWay}"
                              Grid.Row="0">
 
                         <ListBox.ItemTemplate>
@@ -60,13 +77,13 @@
                     <StackPanel Orientation="Vertical"
                                 Grid.Row="1">
 
-                        <TextBox Text="{Binding MetaData.Creator}"
+                        <TextBox Text="{Binding MetaData.Creator, Mode=OneTime}"
                                  IsEnabled="False"/>
 
-                        <TextBox Text="{Binding MetaData.Version}"
+                        <TextBox Text="{Binding MetaData.Version, Mode=OneTime}"
                                  IsEnabled="False"/>
 
-                        <TextBox Text="{Binding MetaData.UpdatedToGameVersion}"
+                        <TextBox Text="{Binding MetaData.UpdatedToGameVersion, Mode=OneTime}"
                                  IsEnabled="False"/>
                     </StackPanel>
                 </Grid>

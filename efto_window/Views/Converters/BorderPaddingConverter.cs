@@ -16,10 +16,7 @@ namespace efto_window.Views.Converters
                 {
                     return new Thickness(0);
                 }
-                else
-                {
-                    return new Thickness(5);
-                }
+                else return new Thickness(5);
             }
             else throw new Exception("[BorderPaddingConverter] Bindable Value not regonized as an string");
         }
