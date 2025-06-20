@@ -1,5 +1,5 @@
-﻿using efto_model.Models;
-using efto_model.Models.DataTransferObjects;
+﻿using efto_model.Models.DataTransferObjects;
+using efto_model.Models.Quests;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

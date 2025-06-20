@@ -1,5 +1,4 @@
 ﻿using efto_model.Models;
-using efto_model.Models.DataTransferObjects;
 using efto_model.Models.Enums;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
@@ -131,7 +130,7 @@ namespace efto_window.Views.ComponentBuilders
                 Children =
                 {
                     CustomSliderHeader("Width"),
-                    CustomSlider(marker.Width, Size_Orientations.Width, callback)
+                    CustomSlider(marker.Width, Size_Parameters.Width, callback)
                 }
             };
 
@@ -141,7 +140,7 @@ namespace efto_window.Views.ComponentBuilders
                 Children =
                 {
                     CustomSliderHeader("Height"),
-                    CustomSlider(marker.Height, Size_Orientations.Height, callback)
+                    CustomSlider(marker.Height, Size_Parameters.Height, callback)
                 }
             };
 
@@ -162,7 +161,7 @@ namespace efto_window.Views.ComponentBuilders
             
         }
 
-        private Slider CustomSlider(double size, Size_Orientations sizeOrientation, Action<object, RangeBaseValueChangedEventArgs> callback)
+        private Slider CustomSlider(double size, Size_Parameters sizeOrientation, Action<object, RangeBaseValueChangedEventArgs> callback)
         {
             Slider slider = new Slider
             {
@@ -173,7 +172,7 @@ namespace efto_window.Views.ComponentBuilders
                 Value = size,
                 Margin = new Thickness(10, 0, 0, 0),
                 VerticalAlignment = VerticalAlignment.Center,
-                Tag = sizeOrientation == Size_Orientations.Width ? "MARKER_SLIDER_WIDTH" : "MARKER_SLIDER_HEIGHT"
+                Tag = sizeOrientation == Size_Parameters.Width ? "MARKER_SLIDER_WIDTH" : "MARKER_SLIDER_HEIGHT"
             };
 
             slider.ValueChanged += (sender, e) => callback.Invoke(sender, e);

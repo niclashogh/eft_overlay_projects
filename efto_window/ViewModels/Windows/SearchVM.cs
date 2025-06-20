@@ -3,8 +3,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using efto_model.Models;
-using efto_model.Models.DataTransferObjects;
-using efto_model.Repositories;
+using efto_model.Models.AccessKeys;
+using efto_model.Models.Quests;
+using efto_model.Repositories.AccessKeys;
+using efto_model.Repositories.Quests;
 
 namespace efto_window.ViewModels.Windows
 {
@@ -86,14 +88,14 @@ namespace efto_window.ViewModels.Windows
         public SearchVM() { }
 
         #region Quest Controls
-        internal async Task FindQuests() => await questRepository.Find(this.QuestSearchWord.Property);
+        internal async Task FindQuests() => await questRepository.FindAsync(this.QuestSearchWord.Property);
 
         internal async Task ToggleQuestActivation()
         {
             foreach (Quest quest in SelectedQuests)
             {
                 quest.IsActive = !quest.IsActive;
-                await questRepository.UpdateActive(quest);
+                await questRepository.UpdateActiveAsync(quest);
 
                 Quest_DTO? old = Quests.FirstOrDefault(sorting => sorting.Id == quest.Id);
 
@@ -101,7 +103,7 @@ namespace efto_window.ViewModels.Windows
                 {
                     int index = Quests.IndexOf(old);
 
-                    Quests[index] = await questRepository.LoadSingle<Quest_DTO>(old.Id);
+                    Quests[index] = await questRepository.LoadSingleAsync<Quest_DTO>(old.Id);
                     //Quests[index].Requirements = await RequirementRepository.LoadFromQuest(old.Id, SelectedTrader);
                     //Quests[index].Rewards = await RewardRepository.LoadFromQuest(old.Id, SelectedTrader);
                     //Quests[index].Tasks = await TaskRepository.LoadFromQuest(old.Id, SelectedTrader);
@@ -115,7 +117,7 @@ namespace efto_window.ViewModels.Windows
             foreach (Quest quest in SelectedQuests)
             {
                 quest.IsComplete = !quest.IsComplete;
-                await questRepository.UpdateCompletion(quest);
+                await questRepository.UpdateCompletionAsync(quest);
 
                 Quest_DTO? old = Quests.FirstOrDefault(sorting => sorting.Id == quest.Id);
 
@@ -123,7 +125,7 @@ namespace efto_window.ViewModels.Windows
                 {
                     int index = Quests.IndexOf(old);
 
-                    Quests[index] = await questRepository.LoadSingle<Quest_DTO>(old.Id);
+                    Quests[index] = await questRepository.LoadSingleAsync<Quest_DTO>(old.Id);
                     //Quests[index].Requirements = await RequirementRepository.LoadFromQuest(old.Id, SelectedTrader);
                     //Quests[index].Rewards = await RewardRepository.LoadFromQuest(old.Id, SelectedTrader);
                     //Quests[index].Tasks = await TaskRepository.LoadFromQuest(old.Id, SelectedTrader);
@@ -133,6 +135,6 @@ namespace efto_window.ViewModels.Windows
         }
         #endregion
 
-        internal async Task FindAccessKeys() => await accessKeyRepository.Find(this.AccessKeySearchWord.Property);
+        internal async Task FindAccessKeys() => await accessKeyRepository.FindAsync(this.AccessKeySearchWord.Property);
     }
 }

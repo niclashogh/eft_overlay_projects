@@ -1,4 +1,8 @@
-﻿using SQLite;
+﻿using efto_model.Models;
+using efto_model.Models.Base;
+using efto_model.Models.Enums;
+using efto_model.Services;
+using SQLite;
 
 namespace efto_model.Data.Tables
 {
@@ -6,21 +10,23 @@ namespace efto_model.Data.Tables
     {
         public Marker_Table(string database)
         {
+            List<SQLProperty> markers = new List<SQLProperty>
+            {
+                new(nameof(Marker.Id), SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKey),
+                new(nameof(Marker.MapId), SQLPropertyTypes.INTEGER, SQLPropertyNotations.ForeignKey, new(nameof(Map), nameof(Map.Id))),
+                new(nameof(Marker.Name), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.NotNull),
+                new(nameof(Marker.Desc), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.NotNull),
+                new(nameof(Marker.Icon), SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.NotNull),
+                new(nameof(Marker.Width), SQLPropertyTypes.DOUBLE, SQLPropertyNotations.NotNull),
+                new(nameof(Marker.Height), SQLPropertyTypes.DOUBLE, SQLPropertyNotations.NotNull),
+                new(nameof(Marker.X), SQLPropertyTypes.DOUBLE, SQLPropertyNotations.NotNull),
+                new(nameof(Marker.Y), SQLPropertyTypes.DOUBLE, SQLPropertyNotations.NotNull)
+            };
+            string markerQuery = DBQueryBuilder.CreateTable(markers, nameof(Marker));
+
             using (SQLiteConnection db = SQLCreateTable(database))
             {
-                db.Execute(@"CREATE TABLE IF NOT EXISTS Marker (
-                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            Name VARCHAR(40) NOT NULL,
-                            Desc VARCHAR(200) NOT NULL,
-                            DP TINYINT NOT NULL,
-                            Map TINYINT NOT NULL,
-                            Type TINYINT NOT NULL,
-                            Color TINYINT NOT NULL,
-                            Width DOUBLE NOT NULL,
-                            Height DOUBLE NOT NULL,
-                            X DOUBLE NOT NULL,
-                            Y DOUBLE NOT NULL
-                            );");
+                db.Execute(markerQuery);
             }
         }
     }

@@ -1,132 +1,39 @@
-﻿using efto_model.Data;
-using efto_model.Models;
-using efto_model.Models.Enums;
-using SQLite;
+﻿using efto_model.Models;
 using System.Collections.ObjectModel;
 
 namespace efto_model.Repositories
 {
-    public class Marker_Repo : DBContext
+    public class Marker_Repo : Generic_Repo
     {
-        public async Task<bool> Add(Marker model)
-        {
-            try
-            {
-                using (SQLiteConnection db = SQLConnection(UserDB))
-                {
-                    string insertQuery = $"INSERT INTO Marker (Name, Desc, DP, Map, Type, Color, Width, Height, X, Y) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                    db.Execute(insertQuery, model.Name, model.Desc, model.DP, model.Map, model.Type, model.Color, model.Width, model.Height, model.X, model.Y);
-                }
+        private string tableName { get; } = "Marker";
 
-                return true;
-            }
-            catch { return false; }
+        public async Task AddAsync(Marker model) => Add(model, this.tableName, UserDB);
+        public async Task DeleteAsync(int id) => Delete(id, this.tableName, UserDB);
+        public async Task<Marker> LoadSingleAsync(int id) => LoadSingle<Marker>(id, this.tableName, UserDB);
+        public async Task<Marker> LoadLastAsync() => LoadLast<Marker>(this.tableName, UserDB);
+
+        public async Task<ObservableCollection<Marker>> LoadByMapAsync(int id)
+        {
+            string propertyName = nameof(Marker.MapId);
+            return LoadById<Marker>(id, propertyName, this.tableName, UserDB);
         }
 
-        public async Task<ObservableCollection<Marker>?> LoadFromMap(Maps map)
+        public async Task UpdateAsync(Marker model)
         {
-            try
-            {
-                using (SQLiteConnection db = SQLConnection(UserDB))
-                {
-                    string selectQuery = $"SELECT * FROM Marker WHERE Map = ?";
-                    List<Marker>? queryResult = db.Query<Marker>(selectQuery, map) ?? null;
-
-                    return queryResult != null ? new ObservableCollection<Marker>(queryResult) : null;
-                }
-            }
-            catch { return null; }
-
+            string[] propertyNames = new[] { nameof(Marker.Name), nameof(Marker.Desc), nameof(Marker.Icon) };
+            Update(model, GetProperties(model, propertyNames), this.tableName, UserDB);
         }
 
-        public async Task<Marker?> LoadLast()
+        public async Task UpdateCoordinatesAsync(Marker model)
         {
-            try
-            {
-                using (SQLiteConnection db = SQLConnection(UserDB))
-                {
-                    string selectQuery = $"SELECT * FROM Marker ORDER BY Id DESC LIMIT 1";
-                    Marker? item = db.Query<Marker>(selectQuery).FirstOrDefault() ?? null;
-
-                    return item != null ? item : null;
-                }
-            }
-            catch { return null; }
+            string[] propertyNames = new[] { nameof(Marker.X), nameof(Marker.Y) };
+            Update(model, GetProperties(model, propertyNames), this.tableName, UserDB);
         }
 
-        public async Task<Marker?> LoadSingle(int id)
+        public async Task UpdateSizeAsync(Marker model)
         {
-            try
-            {
-                using (SQLiteConnection db = SQLConnection(UserDB))
-                {
-                    string selectQuery = $"SELECT * FROM Marker WHERE Id = ?";
-                    Marker? item = db.Query<Marker>(selectQuery, id).FirstOrDefault() ?? null;
-
-                    return item != null ? item : null;
-                }
-            }
-            catch { return null; }
-        }
-
-        public async Task<bool> Remove(int id)
-        {
-            try
-            {
-                using (SQLiteConnection db = SQLConnection(UserDB))
-                {
-                    string deleteQuery = $"DELETE FROM Marker WHERE Id = ?";
-                    db.Execute(deleteQuery, id);
-                }
-
-                return true;
-            }
-            catch { return false; }
-        }
-
-        public async Task<bool> Update(Marker model)
-        {
-            try
-            {
-                using (SQLiteConnection db = SQLConnection(UserDB))
-                {
-                    string updateQuery = $"UPDATE Marker SET Name = ?, Desc = ?, DP = ?, Map = ?, Type = ?, Color = ? WHERE Id = ?";
-                    db.Execute(updateQuery, model.Name, model.Desc, model.DP, model.Map, model.Type, model.Color, model.Id);
-                }
-
-                return true;
-            }
-            catch { return false; }
-        }
-
-        public async Task<bool> UpdateCoordinates(Marker model)
-        {
-            try
-            {
-                using (SQLiteConnection db = SQLConnection(UserDB))
-                {
-                    string updateQuery = $"UPDATE Marker SET X = ?, Y = ? WHERE Id = ?";
-                    db.Execute(updateQuery, model.X, model.Y, model.Id);
-                }
-
-                return true;
-            }
-            catch { return false; }
-        }
-
-        public async Task<bool> UpdateSize(Marker model)
-        {
-            try
-            {
-                using (SQLiteConnection db = SQLConnection(UserDB))
-                {
-                    string updateQuery = $"UPDATE Marker SET Width = ?, Height = ? WHERE Id = ?";
-                    db.Execute(updateQuery, model.Width, model.Height, model.Id);
-                }
-
-                return true;
-            }
-            catch { return false; }
+            string[] propertyNames = new[] { nameof(Marker.Width), nameof(Marker.Height) };
+            Update(model, GetProperties(model, propertyNames), this.tableName, UserDB);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace efto_model.Services
     {
         public DBService()
         {
-            if (!Directory.Exists(ApplicationFolder)) Directory.CreateDirectory(ApplicationFolder);
+            Directory.CreateDirectory(ApplicationFolder);
 
             InitializeEsentialDB(EssentialDB);
             InitializeUserDB(UserDB);
@@ -22,6 +22,9 @@ namespace efto_model.Services
 
                 if (Directory.Exists(database))
                 {
+                    Map_Table map = new(database);
+                    Trader_Table trader = new(database);
+
                     Extraction_Table extraction = new(database);
                     Quest_Table quest = new(database);
                     BTR_Table btr = new(database);

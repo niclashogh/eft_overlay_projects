@@ -29,9 +29,12 @@
         
         <!--#region Content-->
         <Canvas x:Name="MAP_OUTER_CANVAS"
-                Grid.RowSpan="2">
+                Grid.RowSpan="2"
+                IsTabStop="False">
 
-            <Canvas x:Name="MAP_INNER_CANVAS">
+            <Canvas x:Name="MAP_INNER_CANVAS"
+                    IsTabStop="False">
+                
                 <Canvas.RenderTransform>
                     <CompositeTransform x:Name="MAP_TRANSFORM"
                                         ScaleX="1"
@@ -41,7 +44,8 @@
                 </Canvas.RenderTransform>
 
                 <Image x:Name="MAP_IMAGE"
-                       Source="{Binding SelectedMap, Mode=OneWay, Converter={StaticResource ImageSourceConverter}, ConverterParameter='/Assets/Maps/'}"/>
+                       IsTabStop="False"
+                       Source="{Binding SelectedMap, Mode=OneWay, Converter={StaticResource ImageSourceConverter}, ConverterParameter='/Local/Maps/'}"/>
             </Canvas>
         </Canvas>
         <!--#endregion-->

@@ -1,6 +1,5 @@
-﻿using efto_model.Models;
-using efto_model.Models.DataTransferObjects;
-using efto_model.Models.Enums;
+﻿using efto_model.Models.Extractions;
+using efto_model.Records;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

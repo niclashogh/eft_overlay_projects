@@ -1,5 +1,5 @@
-﻿using efto_model.Models.DataTransferObjects;
-using efto_model.Models.Enums;
+﻿using efto_model.Models.Enums;
+using efto_model.Records;
 using efto_window;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
@@ -122,7 +122,7 @@ namespace efto.Services
         #endregion
 
         #region Base Window Controllers
-        internal void InitialNavigation(Frame contentFrame, Page page) => contentFrame.Navigate(page.GetType());
+        internal void InitialNavigation(Frame contentFrame, Page page) => contentFrame.Content = page;
 
         internal void OnClose(InterProcessComs com)
         {
@@ -138,7 +138,7 @@ namespace efto.Services
                 if (list != null)
                 {
                     ViewRecord<Page> page = (ViewRecord<Page>)list.SelectedItem;
-                    contentFrame.Navigate(page.View.GetType());
+                    contentFrame.Content = page.View;
                 }
             }
         }

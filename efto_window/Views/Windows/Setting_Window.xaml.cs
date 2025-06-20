@@ -10,12 +10,13 @@ namespace efto_window.Views.Windows
 {
     public sealed partial class Setting_Window : Window
     {
-        private SettingVM viewModel { get; set; } = new();
+        private SettingVM viewModel { get; set; }
         private WindowController controller;
 
         public Setting_Window()
         {
             this.InitializeComponent();
+            this.viewModel = new(WindowNative.GetWindowHandle(this));
             this.PARENT_GRID.DataContext = this.viewModel;
 
             this.controller = new(this.AppWindow, new(1550, 880), new(Horizontal_Alignments.Center, Vertical_Alignments.Center));

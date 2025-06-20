@@ -6,10 +6,146 @@
     xmlns:local="using:efto_window.Views.Pages.Settings"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:efto_window.Views.Converters"
+    xmlns:components="using:efto_window.Views.Components"
     mc:Ignorable="d"
     Background="Transparent">
 
-    <Grid>
-        <TextBlock Text="Home"/>
+    <Grid x:Name="HOME_GRID">
+        <!--#region Resources & Layout-->
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="/Views/ResourceDictionaries/Setting_Home.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+
+                <converters:TextReplaceUnderscore x:Key="TextReplaceUnderScore"/>
+                <converters:ImageSourceConverter x:Key="ImageSourceConverter"/>
+            </ResourceDictionary>
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!--#endregion-->
+
+        <!--#region Map Selection, Row 0-->
+        <ListBox Grid.Row="0"
+                 ItemsSource="{Binding Maps, Mode=TwoWay}"
+                 SelectedItem="{Binding SelectedMap, Mode=TwoWay}"
+                 HorizontalAlignment="Center">
+
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"
+                                Background="#141414"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+
+                    <TextBlock Text="{Binding Mode=OneWay, Converter={StaticResource TextReplaceUnderScore}}"
+                               FontSize="20"/>
+
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            
+        </ListBox>
+        <!--#endregion-->
+        
+        <!--#region Map Information, Row 1-->
+        <Border Grid.Row="1"
+                HorizontalAlignment="Stretch"
+                Margin="100,10,100,20"
+                CornerRadius="30"
+                Background="#BB000000"
+                BorderThickness="10,0"
+                BorderBrush="RoyalBlue">
+
+            <Grid>
+                <StackPanel HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+
+                    <TextBlock Text="{Binding SelectedMap, Mode=OneWay, Converter={StaticResource TextReplaceUnderScore}}"
+                               HorizontalAlignment="Center"
+                               FontSize="40"
+                               Margin="0,0,0,10"/>
+
+                    <TextBlock Text="{Binding MapDateFeedback, Mode=OneWay}"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,10"/>
+
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Margin="0,0,0,20">
+                    
+                    <Button Content="Import maps"
+                            Background="RoyalBlue"
+                            Margin="0,0,10,0"
+                            Click="ImportMaps_Click"/>
+
+                    <Button Content="Open assets"
+                            Background="RoyalBlue"
+                            Click="OpenMapsFolder_Click"/>
+
+                </StackPanel>
+            </Grid>
+            
+        </Border>
+        <!--#endregion-->
+
+        <!--#region POI Selection, Row 2-->
+        <ListBox Grid.Row="2"
+                 ItemsSource="{Binding POIs, Mode=TwoWay}"
+                 SelectedItem="{Binding SelectedPOI, Mode=TwoWay}"
+                 HorizontalAlignment="Center">
+
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"
+                                Background="#141414"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+
+                    <TextBlock Text="{Binding Mode=OneWay}"
+                               FontSize="20"/>
+
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+        </ListBox>
+        <!--#endregion-->
+
+        <!--#region POI Information, Row 3-->
+        <Border Grid.Row="3"
+                HorizontalAlignment="Stretch"
+                Margin="100,10,100,20"
+                CornerRadius="30"
+                Background="#BB000000"
+                BorderThickness="10,0"
+                BorderBrush="DarkSlateBlue">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                
+                
+            </Grid>
+
+        </Border>
+        <!--#endregion-->
     </Grid>
 </Page>

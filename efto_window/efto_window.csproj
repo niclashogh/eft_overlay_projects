@@ -53,6 +53,11 @@
     <ProjectReference Include="..\efto_model\efto_model.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Views\ResourceDictionaries\Setting_Home.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Views\Windows\Setting_Window.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

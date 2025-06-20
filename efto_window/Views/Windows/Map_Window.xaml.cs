@@ -17,6 +17,9 @@ using efto_window.Services;
 using Windows.UI;
 using efto_model.Models;
 using System.Threading.Tasks;
+using efto_model.Models.Extractions;
+using efto_model.Models.Quests;
+using efto_model.Models.Base;
 
 namespace efto_window.Views.Windows
 {
@@ -70,7 +73,7 @@ namespace efto_window.Views.Windows
                     _ => null
                 };
 
-                if (method  != null)
+                if (method != null)
                 {
                     method.Invoke();
                 }
@@ -122,7 +125,7 @@ namespace efto_window.Views.Windows
 
         private async void OnMapChanged()
         {
-            this.rawImageSize = await ImageService.GetDimensions($"ms-appx:///Assets/Maps/{this.viewModel.SelectedMap}.png");
+            this.rawImageSize = await ImageService.GetDimensions(ImageFolders.Maps, this.viewModel.SelectedMap.ToString());
             this.rawImageRatio = (double)rawImageSize.Width / (double)rawImageSize.Height;
 
             ResetImageCanvas();
@@ -308,7 +311,7 @@ namespace efto_window.Views.Windows
         }
         #endregion
 
-        #region Event Controllers
+        #region Event Controllers // TODO: Scale POIs down when zoom-in and vice-versa
         private async void ScrollEventController<T>(object sender , PointerRoutedEventArgs e) where T : FrameworkElement
         {
             if (sender is T frameworkElement && frameworkElement != null)
@@ -383,31 +386,32 @@ namespace efto_window.Views.Windows
                     {
                         double centerPercentageX = (Canvas.GetLeft(frameworkElement) + this.MAP_TRANSFORM.CenterX) / this.MAP_INNER_CANVAS.Width;
                         double centerPercentageY = (Canvas.GetTop(frameworkElement) + this.MAP_TRANSFORM.CenterY) / this.MAP_INNER_CANVAS.Height;
+                        PositionRecord<double, double> position = new(centerPercentageX, centerPercentageY);
 
                         if (this.selectedDraggableObject == Draggable_Objects.Extraction)
                         {
-                            Extraction extraction = new(new PositionRecord<double, double>(centerPercentageX, centerPercentageY));
+                            Extraction extraction = new(position);
                             extraction.Id = id;
 
                             _ = this.viewModel.UpdateExtraction(extraction);
                         }
                         else if (this.selectedDraggableObject == Draggable_Objects.QuestTask)
                         {
-                            Quest_Task task = new(new PositionRecord<double, double>(centerPercentageX, centerPercentageY));
+                            Quest_Task task = new(position);
                             task.Id = id;
 
                             _ = this.viewModel.UpdateQuestTask(task);
                         }
                         else if (this.selectedDraggableObject == Draggable_Objects.BTR)
                         {
-                            BTR btr = new(new PositionRecord<double, double>(centerPercentageX, centerPercentageY));
+                            BTR btr = new(position);
                             btr.Id = id;
 
                             _ = this.viewModel.UpdateBTR(btr);
                         }
                         else if (this.selectedDraggableObject == Draggable_Objects.Marker)
                         {
-                            Marker marker = new(new PositionRecord<double, double>(centerPercentageX, centerPercentageY));
+                            Marker marker = new(position);
                             marker.Id = id;
 
                             _ = this.viewModel.UpdateMarkerSize(marker);
