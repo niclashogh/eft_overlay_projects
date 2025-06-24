@@ -24,7 +24,19 @@ namespace efto_window.Views.ComponentBuilders
             this.GRID = CreateGrid(marker.Id);
 
             _ = CreateToolTipAsync(marker.Desc);
-            _ = CreateIconAsync(marker.Icon, marker.Width, marker.Height);
+
+            switch (marker.Icon)
+            {
+                case "InternalEllipse":
+                    _ = CreateIconAsync(marker.Icon, marker.Width, marker.Height); //
+                    break;
+                case "InternalBox":
+                    _ = CreateIconAsync(marker.Icon, marker.Width, marker.Height); //
+                    break;
+                default:
+                    _ = CreateIconAsync(marker.Icon, marker.Width, marker.Height);
+                    break;
+            }
 
             this.GRID.ContextFlyout = CreateContextMenu(marker, callback);
         }
@@ -70,6 +82,8 @@ namespace efto_window.Views.ComponentBuilders
 
             this.GRID.Children.Add(image);
         }
+
+        // Add Ellipse & Box
 
         private Flyout CreateContextMenu(Marker marker, Action<object, RangeBaseValueChangedEventArgs> callback)
         {

@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using efto_model.Interfaces;
 using efto_model.Models;
 using efto_model.Models.Base;
 using efto_model.Models.Extractions;
 using efto_model.Models.Quests;
+using efto_model.Records;
 using efto_model.Repositories;
 using efto_model.Repositories.Base;
 using efto_model.Repositories.Extractions;
@@ -133,7 +134,7 @@ namespace efto_window.ViewModels.Windows
         #region Extraction Controls
         internal async Task LoadExtractions()
         {
-            this.Extractions = await this.extractionRepository.LoadByMapAsync<Extraction_DTO>(this.SelectedMap.Id);
+            this.Extractions = await this.extractionRepository.LoadByMapAsync<Extraction_DTO>(this.SelectedMap.Name);
 
             if (this.Extractions != null && this.Extractions.Any())
             {
@@ -147,11 +148,14 @@ namespace efto_window.ViewModels.Windows
             }
         }
 
-        internal async Task UpdateExtraction(Extraction selected)
+        internal async Task UpdateExtraction(IPosition selected)
         {
             if (selected != null && selected.Id >= 0 && this.Extractions != null)
             {
-                await this.extractionRepository.UpdateCoordinatesAsync(selected);
+                Extraction extraction = new(new PositionRecord<double, double>(selected.X, selected.Y));
+                extraction.Id = selected.Id;
+
+                await this.extractionRepository.UpdateCoordinatesAsync(extraction);
 
                 Extraction_DTO? old = this.Extractions.FirstOrDefault(sorting => sorting.Id == selected.Id);
 
@@ -169,15 +173,18 @@ namespace efto_window.ViewModels.Windows
         #region QuestTask Controls
         internal async Task LoadQuestTasks()
         {
-            this.Tasks = await this.questTaskRepository.LoadActiveByMapAsync(this.SelectedMap.Id);
+            this.Tasks = await this.questTaskRepository.LoadActiveByMapAsync(this.SelectedMap.Na);
             this.FinishedLoadingTasks = true;
         }
 
-        internal async Task UpdateQuestTask(Quest_Task selected)
+        internal async Task UpdateQuestTask(IPosition selected)
         {
             if (selected != null && selected.Id >= 0 && this.Tasks != null)
             {
-                await this.questTaskRepository.UpdateCoordiantesAsync(selected);
+                Quest_Task task = new(new PositionRecord<double, double>(selected.X, selected.Y));
+                task.Id = selected.Id;
+
+                await this.questTaskRepository.UpdateCoordiantesAsync(task);
 
                 Quest_Task? old = this.Tasks.FirstOrDefault(sorting => sorting.Id == selected.Id);
 
@@ -195,15 +202,18 @@ namespace efto_window.ViewModels.Windows
         #region BTR Controls
         internal async Task LoadBTR()
         {
-            this.BTR = await this.btrRepository.LoadByMapAsync(this.SelectedMap.Id);
+            this.BTR = await this.btrRepository.LoadByMapAsync(this.SelectedMap.Name);
             this.FinishedLoadingBTR = true;
         }
 
-        internal async Task UpdateBTR(BTR selected)
+        internal async Task UpdateBTR(IPosition selected)
         {
             if (selected != null && selected.Id >= 0)
             {
-                await this.btrRepository.UpdateCoordinates(selected);
+                BTR btr = new(new PositionRecord<double, double>(selected.X, selected.Y));
+                btr.Id = selected.Id;
+
+                await this.btrRepository.UpdateCoordinates(btr);
 
                 BTR? old = this.BTR.FirstOrDefault(sorting => sorting.Id == selected.Id);
 
@@ -221,15 +231,18 @@ namespace efto_window.ViewModels.Windows
         #region Marker Controls
         internal async Task LoadMarkers()
         {
-            this.Markers = await this.markerRepository.LoadByMapAsync(this.SelectedMap.Id);
+            this.Markers = await this.markerRepository.LoadByMapAsync(this.SelectedMap.Name);
             this.FinishedLoadingMarkers = true;
         }
 
-        internal async Task UpdateMarkerCoordinates(Marker selected)
+        internal async Task UpdateMarkerCoordinates(IPosition selected)
         {
             if (selected != null && selected.Id >= 0)
             {
-                await this.markerRepository.UpdateCoordinatesAsync(selected);
+                Marker marker = new(new PositionRecord<double, double>(selected.X, selected.Y));
+                marker.Id = selected.Id;
+
+                await this.markerRepository.UpdateCoordinatesAsync(marker);
 
                 Marker? old = this.Markers.FirstOrDefault(sorting => sorting.Id == selected.Id);
 
@@ -243,19 +256,22 @@ namespace efto_window.ViewModels.Windows
             }
         }
 
-        internal async Task UpdateMarkerSize(Marker selected)
+        internal async Task UpdateMarkerSize(DimensionRecord<double> size, int id)
         {
-            if (selected != null && selected.Id! <= 0)
+            if (id <= 0)
             {
-                await this.markerRepository.UpdateSizeAsync(selected);
+                Marker marker = new(size);
+                marker.Id = id;
 
-                Marker? old = this.Markers.FirstOrDefault(sorting => sorting.Id == selected.Id);
+                await this.markerRepository.UpdateSizeAsync(marker);
+
+                Marker? old = this.Markers.FirstOrDefault(sorting => sorting.Id == id);
 
                 if (old != null)
                 {
                     int index = this.Markers.IndexOf(old);
 
-                    this.Markers[index] = await this.markerRepository.LoadSingleAsync(selected.Id);
+                    this.Markers[index] = await this.markerRepository.LoadSingleAsync(id);
                     OnPropertyChanged(nameof(this.Markers));
                 }
             }

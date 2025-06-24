@@ -19,6 +19,8 @@ using System.Threading.Tasks;
 using efto_model.Models.Extractions;
 using efto_model.Models.Quests;
 using efto_model.Models.Base;
+using efto_model.Records;
+using efto_model.Interfaces;
 
 namespace efto_window.Views.Windows
 {
@@ -112,10 +114,7 @@ namespace efto_window.Views.Windows
 
                         if (int.TryParse(parent.Tag.ToString(), out int id))
                         {
-                            Marker marker = new(new DimensionRecord<double>(shape.Width, shape.Height));
-                            marker.Id = id;
-
-                            _ = this.viewModel.UpdateMarkerSize(marker);
+                            _ = this.viewModel.UpdateMarkerSize(new DimensionRecord<double>(shape.Width, shape.Height), id);
                         }
                     }
                 }
@@ -203,7 +202,7 @@ namespace efto_window.Views.Windows
                 {
                     ExtractionComponent component = new(extraction);
 
-                    if (extraction.DP == Dragging_Privileges.Everyone || this.viewModel.IsRunningAsAdminstrator())
+                    if (this.viewModel.IsRunningAsAdminstrator())
                     {
                         component.GRID.PointerPressed += (sender, e) => CaptureEventController<Grid>(sender, e, Draggable_Objects.Extraction);
                         component.GRID.PointerMoved += (sender, e) => MoveEventController<Grid>(sender, e);

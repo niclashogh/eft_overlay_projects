@@ -17,7 +17,7 @@ namespace efto_window.Views.ComponentBuilders
 {
     public class BTRComponent
     {
-        public static DimensionRecord<int> Size
+        public DimensionRecord<int> Size
         {
             get { return new DimensionRecord<int>(20, 20); }
         }
