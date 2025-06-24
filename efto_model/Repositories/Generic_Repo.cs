@@ -11,7 +11,6 @@ namespace efto_model.Repositories
     {
         protected List<PropertyInfo> GetProperties<T>(T model, string[] propertyNames) where T : class => model.GetType().GetProperties().Where(property => propertyNames.Contains(property.Name)).ToList();
 
-        #region CRUD
         protected void Add<T>(T model, string tableName, string database) where T : class
         {
             try
@@ -31,11 +30,31 @@ namespace efto_model.Repositories
             catch(Exception e) { Debug.WriteLine("Generic_Repo.Add: " + e); }
         }
 
-        protected void Update<T>(T model, List<PropertyInfo> properties, string tableName, string database) where T : class
+        protected ObservableCollection<T> LoadAll<T>(string tableName, string database) where T : class, new()
         {
             try
             {
-                string query = DBQueryBuilder.Update(properties, tableName);
+                string query = DBQueryBuilder.LoadAll(tableName);
+
+                using (SQLiteConnection db = SQLConnection(database))
+                {
+                    List<T> queryResult = db.Query<T>(query) ?? new List<T>();
+                    return new ObservableCollection<T>(queryResult);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Generic_Repo.LoadAll: " + e);
+                return new ObservableCollection<T>();
+            }
+        }
+
+        #region Update
+        protected void UpdateById<T>(T model, List<PropertyInfo> properties, string tableName, string database) where T : class
+        {
+            try
+            {
+                string query = DBQueryBuilder.UpdateById(properties, tableName);
                 object?[] propertiesAsObject = properties.Select(property => property.GetValue(model)).ToArray();
 
                 if (propertiesAsObject != null || propertiesAsObject.Length > 0)
@@ -58,47 +77,76 @@ namespace efto_model.Repositories
                     }
                 }
             }
-            catch (Exception e) { Debug.WriteLine("Generic_Repo.Update: " + e); }
+            catch (Exception e) { Debug.WriteLine("Generic_Repo.UpdateById: " + e); }
         }
 
-        protected void Delete(int id, string tableName, string database)
+        protected void UpdateByKey<T>(T model, List<PropertyInfo> properties, string key, string tableName, string database) where T : class
         {
             try
             {
-                string query = DBQueryBuilder.Delete(tableName);
+                string query = DBQueryBuilder.UpdateById(properties, tableName);
+                object?[] propertiesAsObject = properties.Select(property => property.GetValue(model)).ToArray();
+
+                if (propertiesAsObject != null || propertiesAsObject.Length > 0)
+                {
+                    PropertyInfo? keyProperty = typeof(T).GetProperty(key);
+
+                    if (keyProperty != null)
+                    {
+                        object? keyAsObject = keyProperty.GetValue(model);
+
+                        if (keyAsObject != null)
+                        {
+                            object[] parametersAsObject = propertiesAsObject.Concat(new object[] { keyAsObject }).ToArray()!;
+
+                            using (SQLiteConnection db = SQLConnection(database))
+                            {
+                                db.Execute(query, parametersAsObject);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e) { Debug.WriteLine("Generic_Repo.UpdateByKey: " + e); }
+        }
+        #endregion
+
+        #region Delete
+        protected void DeleteById(int id, string tableName, string database)
+        {
+            try
+            {
+                string query = DBQueryBuilder.DeleteById(tableName);
 
                 using (SQLiteConnection db = SQLConnection(database))
                 {
                     db.Execute(query, id);
                 }
             }
-            catch(Exception e) { Debug.WriteLine("Generic_Repo.Delete: " + e); }
+            catch(Exception e) { Debug.WriteLine("Generic_Repo.DeleteById: " + e); }
         }
 
-        protected ObservableCollection<T> LoadAll<T>(string tableName, string database) where T : class, new()
+        protected void DeleteByKey((string value, string key) property, string tableName, string database)
         {
             try
             {
-                string query = DBQueryBuilder.LoadSingle(tableName);
+                string query = DBQueryBuilder.DeleteByKey(property.key, tableName);
 
                 using (SQLiteConnection db = SQLConnection(database))
                 {
-                    List<T> queryResult = db.Query<T>(query) ?? new List<T>();
-                    return new ObservableCollection<T>(queryResult);
+                    db.Execute(query, property.value);
                 }
             }
-            catch (Exception e)
-            {
-                Debug.WriteLine("Generic_Repo.LoadAll: " + e);
-                return new ObservableCollection<T>();
-            }
+            catch (Exception e) { Debug.WriteLine("Generic_Repo.DeleteByKey: " + e); }
         }
+        #endregion
 
-        protected T LoadSingle<T>(int id, string tableName, string database) where T : class, new()
+        #region LoadSingle
+        protected T LoadSingleById<T>(int id, string tableName, string database) where T : class, new()
         {
             try
             {
-                string query = DBQueryBuilder.LoadSingle(tableName);
+                string query = DBQueryBuilder.LoadSingleById(tableName);
 
                 using (SQLiteConnection db = SQLConnection(database))
                 {
@@ -107,16 +155,36 @@ namespace efto_model.Repositories
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Generic_Repo.LoadSingle: " + e);
+                Debug.WriteLine("Generic_Repo.LoadSingleById: " + e);
                 return new T();
             }
         }
 
-        protected T LoadLast<T>(string tableName, string database) where T : class, new()
+        protected T LoadSingleByKey<T>((string value, string key) property, string tableName, string database) where T : class, new()
         {
             try
             {
-                string query = DBQueryBuilder.LoadLast(tableName);
+                string query = DBQueryBuilder.LoadSingleByKey(property.key, tableName);
+
+                using (SQLiteConnection db = SQLConnection(database))
+                {
+                    return db.Query<T>(query, property.value).FirstOrDefault() ?? new T();
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Generic_Repo.LoadSingleByKey: " + e);
+                return new T();
+            }
+        }
+        #endregion
+
+        #region LoadLast
+        protected T LoadLastById<T>(string tableName, string database) where T : class, new()
+        {
+            try
+            {
+                string query = DBQueryBuilder.LoadLastById(tableName);
 
                 using (SQLiteConnection db = SQLConnection(database))
                 {
@@ -125,30 +193,47 @@ namespace efto_model.Repositories
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Generic_Repo.LoadLast: " + e);
+                Debug.WriteLine("Generic_Repo.LoadLastById: " + e);
+                return new T();
+            }
+        }
+
+        protected T LoadLastByKey<T>(string key, string tableName, string database) where T : class, new()
+        {
+            try
+            {
+                string query = DBQueryBuilder.LoadLastByKey(key, tableName);
+
+                using (SQLiteConnection db = SQLConnection(database))
+                {
+                    return db.Query<T>(query).FirstOrDefault() ?? new T();
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Generic_Repo.LoadLastByKey: " + e);
                 return new T();
             }
         }
         #endregion
 
-        #region Get by parameter
-        protected ObservableCollection<T> FindBySearchWord<T>(string propertyName, string searchWord, string tableName, string database) where T : class, new()
+        protected ObservableCollection<T> FindBySearchWord<T>((string searchWord, string key) property, string tableName, string database) where T : class, new()
         {
             try
             {
-                string query = DBQueryBuilder.FindBySearchWord(propertyName, tableName);
+                string query = DBQueryBuilder.FindBySearchWord(property.key, tableName);
 
                 using (SQLiteConnection db = SQLConnection(database))
                 {
-                    List<T>? queryResult = db.Query<T>(query, $"%{searchWord}%") ?? null;
+                    List<T>? queryResult = db.Query<T>(query, $"%{property.searchWord}%") ?? null;
 
                     if (queryResult != null && queryResult.Count > 0)
                     {
-                        if (searchWord.Length == 1)
+                        if (property.searchWord.Length == 1)
                         {
                             queryResult = queryResult.Where(item =>
                             {
-                                return propertyName != null && propertyName.StartsWith(searchWord, StringComparison.OrdinalIgnoreCase);
+                                return property.key != null && property.key.StartsWith(property.searchWord, StringComparison.OrdinalIgnoreCase);
                             }).ToList();
                         }
 
@@ -162,13 +247,14 @@ namespace efto_model.Repositories
                 Debug.WriteLine("Generic_Repo.Find: " + e);
                 return new ObservableCollection<T>();
             }
-        } 
+        }
 
-        protected ObservableCollection<T> LoadById<T>(int id, string propertyName, string tableName, string database) where T : class, new()
+        #region LoadBy
+        protected ObservableCollection<T> LoadById<T>(int id, string tableName, string database) where T : class, new()
         {
             try
             {
-                string query = DBQueryBuilder.LoadById(propertyName, tableName);
+                string query = DBQueryBuilder.LoadById(tableName);
 
                 using (SQLiteConnection db = SQLConnection(database))
                 {
@@ -183,19 +269,38 @@ namespace efto_model.Repositories
             }
         }
 
-        protected void DeleteAllById(int id, string propertyName, string tableName, string database)
+        protected ObservableCollection<T> LoadByKey<T>((string value, string key) property, string tableName, string database) where T : class, new()
         {
             try
             {
-                string query = DBQueryBuilder.DeleteAllById(propertyName, tableName);
+                string query = DBQueryBuilder.LoadByKey(property.key, tableName);
 
                 using (SQLiteConnection db = SQLConnection(database))
                 {
-                    db.Execute(query, id);
+                    List<T> queryResult = db.Query<T>(query, property.value) ?? new List<T>();
+                    return new ObservableCollection<T>(queryResult);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Generic_Repo.LoadByKey: " + e);
+                return new ObservableCollection<T>();
+            }
+        }
+        #endregion
+
+        protected void DeleteAllByKey((int value, string key) property, string tableName, string database)
+        {
+            try
+            {
+                string query = DBQueryBuilder.DeleteAllByKey(property.key, tableName);
+
+                using (SQLiteConnection db = SQLConnection(database))
+                {
+                    db.Execute(query, property.value);
                 }
             }
             catch (Exception e) { Debug.WriteLine("Generic_Repo.DeleteAllById: " + e); }
         }
-        #endregion
     }
 }

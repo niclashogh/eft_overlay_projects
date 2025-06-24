@@ -6,16 +6,16 @@ namespace efto_model.Models.Quests
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int TraderId { get; set; }
+        public string TraderName { get; set; }
         public Quest_Access AccessEnum { get; set; }
 
         public bool IsActive { get; set; }
         public bool IsComplete { get; set; }
 
-        public Quest(string name, int traderId, Quest_Access accessEnum) : this(false, false)
+        public Quest(string name, string traderName, Quest_Access accessEnum) : this(false, false)
         {
             this.Name = name;
-            this.TraderId = traderId;
+            this.TraderName = traderName;
             this.AccessEnum = accessEnum;
         }
 

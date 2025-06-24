@@ -8,26 +8,18 @@ namespace efto_model.Repositories.Quests
         private string tableName { get; } = "Quest_Requirement";
 
         public async Task AddAsync(Quest_Requirement model) => Add(model, this.tableName, EssentialDB);
-        public async Task DeleteAsync(int id) => Delete(id, this.tableName, EssentialDB);
-        public async Task<Quest_Requirement> LoadSingleAsync(int id) => LoadSingle<Quest_Requirement>(id, this.tableName, EssentialDB);
-        public async Task<Quest_Requirement> LoadLastAsync() => LoadLast<Quest_Requirement>(this.tableName, EssentialDB);
+        public async Task DeleteAsync(int id) => DeleteById(id, this.tableName, EssentialDB);
+        public async Task<Quest_Requirement> LoadSingleAsync(int id) => LoadSingleById<Quest_Requirement>(id, this.tableName, EssentialDB);
+        public async Task<Quest_Requirement> LoadLastAsync() => LoadLastById<Quest_Requirement>(this.tableName, EssentialDB);
 
-        public async Task<ObservableCollection<Quest_Requirement>> LoadByQuestAsync(int id)
-        {
-            string propertyName = nameof(Quest_Requirement.QuestId);
-            return LoadById<Quest_Requirement>(id, propertyName, this.tableName, EssentialDB);
-        }
+        public async Task<ObservableCollection<Quest_Requirement>> LoadByQuestAsync(int id) => LoadById<Quest_Requirement>(id, this.tableName, EssentialDB);
 
-        public async Task DeleteAllByQuestAsync(int id)
-        {
-            string propertyName = nameof(Quest_Requirement.QuestId);
-            DeleteAllById(id, propertyName, this.tableName, EssentialDB);
-        }
+        public async Task DeleteAllByQuestAsync(int id) => DeleteAllByKey((id, nameof(Quest_Requirement.QuestId)), this.tableName, EssentialDB);
 
-        public async Task Update(Quest_Requirement model)
+        public async Task UpdateAsync(Quest_Requirement model)
         {
             string[] propertyNames = new[] { nameof(Quest_Requirement.Requirement) };
-            Update(model, GetProperties(model, propertyNames), this.tableName, EssentialDB);
+            UpdateById(model, GetProperties(model, propertyNames), this.tableName, EssentialDB);
         }
     }
 }

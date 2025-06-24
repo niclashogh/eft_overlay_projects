@@ -2,18 +2,13 @@
 {
     public class Map
     {
-        public int Id { get; set; }
         public string Name { get; set; }
 
         public double? UpdatedToVersion { get; set; }
 
-        public Map(string name, double updateToVersion)
-        {
-            Name = name;
-            UpdatedToVersion = updateToVersion;
-        }
+        public Map(string name, double updateToVersion) : this(updateToVersion) => this.Name = name;
 
-        public Map(string name) => Name = name;
+        public Map(double updateToVersion) => this.UpdatedToVersion = updateToVersion;
 
         public Map() { }
     }

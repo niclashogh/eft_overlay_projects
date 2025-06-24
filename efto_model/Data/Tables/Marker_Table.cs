@@ -13,7 +13,7 @@ namespace efto_model.Data.Tables
             List<SQLProperty> markers = new List<SQLProperty>
             {
                 new(nameof(Marker.Id), SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKey),
-                new(nameof(Marker.MapId), SQLPropertyTypes.INTEGER, SQLPropertyNotations.ForeignKey, new(nameof(Map), nameof(Map.Id))),
+                new(nameof(Marker.MapName), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.ForeignKey, new(nameof(Map), nameof(Map.Name))),
                 new(nameof(Marker.Name), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.NotNull),
                 new(nameof(Marker.Desc), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.NotNull),
                 new(nameof(Marker.Icon), SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.NotNull),

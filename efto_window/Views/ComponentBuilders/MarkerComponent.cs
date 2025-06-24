@@ -1,13 +1,16 @@
-﻿using efto_model.Models;
+﻿using efto_model.Data;
+using efto_model.Models;
 using efto_model.Models.Enums;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Shapes;
+using Microsoft.UI.Xaml.Media.Imaging;
 using System;
-using Windows.Foundation;
+using System.IO;
+using System.Threading.Tasks;
+using Windows.Storage.Streams;
 using Windows.UI;
 
 namespace efto_window.Views.ComponentBuilders
@@ -18,23 +21,20 @@ namespace efto_window.Views.ComponentBuilders
 
         public MarkerComponent(Marker marker, Action<object, RangeBaseValueChangedEventArgs> callback)
         {
-            this.GRID = CustomGrid(marker.Id);
-            ToolTipService.SetToolTip(this.GRID, CustomToolTip(marker.Desc));
-            this.GRID.ContextFlyout = CustomContextMenu(marker, callback);
+            this.GRID = CreateGrid(marker.Id);
 
-            this.GRID.Children.Add(marker.Type switch
-            {
-                Marker_Types.Rectangle => CustomRectangle(marker),
-                Marker_Types.Ellipse => CustomEllipse(marker),
-                Marker_Types.Icon => CustomIcon(marker)
-            });
+            _ = CreateToolTipAsync(marker.Desc);
+            _ = CreateIconAsync(marker.Icon, marker.Width, marker.Height);
+
+            this.GRID.ContextFlyout = CreateContextMenu(marker, callback);
         }
 
-        private Grid CustomGrid(int id) => new Grid { Tag = id };
+        #region Local methods
+        private Grid CreateGrid(int id) => new Grid { Tag = id };
 
-        private ToolTip CustomToolTip(string desc)
+        private async Task CreateToolTipAsync(string desc)
         {
-            return new ToolTip
+            ToolTip tooltip = new ToolTip
             {
                 Background = new SolidColorBrush(Color.FromArgb(255, 30, 30, 30)),
                 Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255)),
@@ -43,94 +43,43 @@ namespace efto_window.Views.ComponentBuilders
                 Padding = new Thickness(8),
                 Content = desc
             };
+
+            ToolTipService.SetToolTip(this.GRID, tooltip);
         }
 
-        private Rectangle CustomRectangle(Marker marker)
+        private async Task CreateIconAsync(string icon, double width, double height)
         {
-            (byte R, byte G, byte B) color = Color_DTO.GetFromEnum(marker.Color);
+            string imagePath = Path.Combine(AssetContext.ApplicationFolder, ImageFolders.BTR.ToString(), icon);
+            BitmapImage bitmap = new();
 
-            return new Rectangle
+            using (FileStream stream = File.OpenRead(imagePath))
             {
-                Width = marker.Width,
-                Height = marker.Height,
-                StrokeThickness = 4,
-                Stroke = new SolidColorBrush(Color.FromArgb(255, color.R, color.G, color.B)),
-                Fill = new SolidColorBrush(Color.FromArgb(80, 0, 0, 0)),
-                Tag = "MARKER_SHAPE"
-            };
-        }
-
-        private Ellipse CustomEllipse(Marker marker)
-        {
-            (byte R, byte G, byte B) color = Color_DTO.GetFromEnum(marker.Color);
-
-            return new Ellipse
-            {
-                Width = marker.Width,
-                Height = marker.Height,
-                StrokeThickness = 4,
-                Stroke = new SolidColorBrush(Color.FromArgb(255, color.R, color.G, color.B)),
-                Fill = new SolidColorBrush(Color.FromArgb(80, 0, 0, 0)),
-                Tag = "MARKER_SHAPE"
-            };
-        }
-
-        private Path CustomIcon(Marker marker)
-        {
-            PathFigure figure = new PathFigure
-            {
-                StartPoint = new Point(0, 0),
-                Segments =
+                using (IRandomAccessStream rndAccessStream = stream.AsRandomAccessStream())
                 {
-                    new LineSegment // Top line
-                    {
-                        Point = new Point(marker.Width - 3, 0)
-                    },
-
-                    new LineSegment // Right line
-                    {
-                        Point = new Point(marker.Width - 3, marker.Height - 3)
-                    },
-
-                    new LineSegment // Bottom line
-                    {
-                        Point = new Point(0, marker.Height - 3)
-                    }
-                },
-                IsClosed = true // Left line
-            };
-
-            PathGeometry geometry = new PathGeometry
-            {
-                Figures =
-                {
-                    figure
+                    await bitmap.SetSourceAsync(rndAccessStream);
                 }
-            };
+            }
 
-            (byte R, byte G, byte B) color = Color_DTO.GetFromEnum(marker.Color);
-
-            return new Path
+            Image image = new Image
             {
-                Stroke = new SolidColorBrush(Color.FromArgb(255, color.R, color.G, color.B)),
-                StrokeThickness = 3,
-                Fill = new SolidColorBrush(Color.FromArgb(60, 0, 0, 0)),
-                IsHitTestVisible = false,
-                IsTabStop = false,
-                Data = geometry,
-                Tag = "MARKER_SHAPE"
+                Tag = "MARKER_ICON",
+                Source = bitmap,
+                Width = width,
+                Height = height
             };
+
+            this.GRID.Children.Add(image);
         }
 
-        private Flyout CustomContextMenu(Marker marker, Action<object, RangeBaseValueChangedEventArgs> callback)
+        private Flyout CreateContextMenu(Marker marker, Action<object, RangeBaseValueChangedEventArgs> callback)
         {
             StackPanel widthPanel = new StackPanel
             {
                 Orientation = Orientation.Horizontal,
                 Children =
                 {
-                    CustomSliderHeader("Width"),
-                    CustomSlider(marker.Width, Size_Parameters.Width, callback)
+                    CreateSliderHeader("Width"),
+                    CreateSlider(marker.Width, Size_Parameters.Width, callback)
                 }
             };
 
@@ -139,8 +88,8 @@ namespace efto_window.Views.ComponentBuilders
                 Orientation = Orientation.Horizontal,
                 Children =
                 {
-                    CustomSliderHeader("Height"),
-                    CustomSlider(marker.Height, Size_Parameters.Height, callback)
+                    CreateSliderHeader("Height"),
+                    CreateSlider(marker.Height, Size_Parameters.Height, callback)
                 }
             };
 
@@ -161,7 +110,7 @@ namespace efto_window.Views.ComponentBuilders
             
         }
 
-        private Slider CustomSlider(double size, Size_Parameters sizeOrientation, Action<object, RangeBaseValueChangedEventArgs> callback)
+        private Slider CreateSlider(double size, Size_Parameters sizeOrientation, Action<object, RangeBaseValueChangedEventArgs> callback)
         {
             Slider slider = new Slider
             {
@@ -180,7 +129,7 @@ namespace efto_window.Views.ComponentBuilders
             return slider;
         }
 
-        private TextBlock CustomSliderHeader(string header)
+        private TextBlock CreateSliderHeader(string header)
         {
             return new TextBlock
             {
@@ -191,5 +140,6 @@ namespace efto_window.Views.ComponentBuilders
                 FontWeight = FontWeights.SemiBold
             };
         }
+        #endregion
     }
 }

@@ -10,17 +10,17 @@ namespace efto_model.Models.Extractions
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public int MapId { get; set; }
-        public int TypeId { get; set; }
+        public string MapName { get; set; }
+        public string Type { get; set; }
 
         public double X { get; set; }
         public double Y { get; set; }
 
-        public Extraction(string name, int mapId, int typeId) : this(new PositionRecord<double, double>(.5, .5))
+        public Extraction(string name, string mapName, string type) : this(new PositionRecord<double, double>(.5, .5))
         {
-            Name = name;
-            MapId = mapId;
-            TypeId = typeId;
+            this.Name = name;
+            this.MapName = mapName;
+            this.Type = type;
         }
 
         public Extraction(PositionRecord<double, double> pos)

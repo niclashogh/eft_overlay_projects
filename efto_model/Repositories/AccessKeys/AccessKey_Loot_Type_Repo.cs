@@ -7,14 +7,14 @@ namespace efto_model.Repositories.AccessKeys
         private string tableName { get; } = "AccessKey_Loot_Type";
 
         public async Task AddAsync(AccessKey_Loot_Type model) => Add(model, this.tableName, EssentialDB);
-        public async Task DeleteAsync(int id) => Delete(id, this.tableName, EssentialDB);
-        public async Task<AccessKey_Loot_Type> LoadSingleAsync(int id) => LoadSingle<AccessKey_Loot_Type>(id, this.tableName, EssentialDB);
-        public async Task<AccessKey_Loot_Type> LoadLastAsync() => LoadLast<AccessKey_Loot_Type>(this.tableName, EssentialDB);
+        public async Task DeleteAsync(int id) => DeleteById(id, this.tableName, EssentialDB);
+        public async Task<AccessKey_Loot_Type> LoadSingleAsync(int id) => LoadSingleById<AccessKey_Loot_Type>(id, this.tableName, EssentialDB);
+        public async Task<AccessKey_Loot_Type> LoadLastAsync() => LoadLastById<AccessKey_Loot_Type>(this.tableName, EssentialDB);
 
-        public async Task Update(AccessKey_Loot_Type model)
+        public async Task UpdateAsync(AccessKey_Loot_Type model)
         {
             string[] propertyNames = new[] { nameof(AccessKey_Loot_Type.Type) };
-            Update(model, GetProperties(model, propertyNames), this.tableName, EssentialDB);
+            UpdateById(model, GetProperties(model, propertyNames), this.tableName, EssentialDB);
         }
     }
 }

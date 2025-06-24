@@ -7,7 +7,6 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using efto_window.ViewModels.Windows;
 using efto_model.Models.Enums;
-using efto_model.Models.DataTransferObjects;
 using efto.Services;
 using WinRT.Interop;
 using efto_window.Views.ComponentBuilders;
@@ -95,7 +94,7 @@ namespace efto_window.Views.Windows
 
                 if (parent != null)
                 {
-                    FrameworkElement? shape = FrameworkElementService.FindChildByTag(parent, "MARKER_SHAPE");
+                    FrameworkElement? shape = FrameworkElementService.FindChildByTag(parent, "MARKER_ICON");
 
                     if (shape != null)
                     {

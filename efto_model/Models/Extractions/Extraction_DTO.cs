@@ -16,7 +16,7 @@ namespace efto_model.Models.Extractions
             }
         }
 
-        public Extraction_DTO(string name, int mapId, int typeId) : base(name, mapId, typeId) { }
+        public Extraction_DTO(string name, string mapName, string type) : base(name, mapName, type) { }
 
         public Extraction_DTO(PositionRecord<double, double> pos) : base(pos) { }
 

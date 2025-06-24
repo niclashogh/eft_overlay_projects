@@ -1,13 +1,14 @@
-﻿using efto_model.Records;
+﻿using efto_model.Interfaces;
+using efto_model.Records;
 using efto_model.Services;
 
 namespace efto_model.Models.Quests
 {
-    public class Quest_Task : NotifyChangedService
+    public class Quest_Task : NotifyChangedService, IPosition
     {
         public int Id { get; set; }
-        public int MapId { get; set; }
-        public int TraderId { get; set; }
+        public string MapName { get; set; }
+        public string TraderName { get; set; }
         public int QuestId { get; set; }
 
         public string Desc { get; set; }
@@ -16,12 +17,12 @@ namespace efto_model.Models.Quests
         public double X { get; set; }
         public double Y { get; set; }
 
-        public Quest_Task(int mapId, int traderId, int questId, string desc, int sequence) : this(mapId, traderId, desc, sequence) => this.QuestId = questId;
+        public Quest_Task(string mapName, string traderName, int questId, string desc, int sequence) : this(mapName, traderName, desc, sequence) => this.QuestId = questId;
 
-        public Quest_Task(int mapId, int traderId, string desc, int sequence) : this(new PositionRecord<double, double>(.5, .5))
+        public Quest_Task(string mapName, string traderName, string desc, int sequence) : this(new PositionRecord<double, double>(.5, .5))
         {
-            this.MapId = mapId;
-            this.TraderId = traderId;
+            this.MapName = mapName;
+            this.TraderName = traderName;
 
             this.Desc = desc;
             this.Sequence = sequence;

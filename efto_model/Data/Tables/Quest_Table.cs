@@ -15,7 +15,7 @@ namespace efto_model.Data.Tables
             {
                 new(nameof(Quest.Id), SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKey),
                 new(nameof(Quest.Name), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.NotNull),
-                new(nameof(Quest.TraderId), SQLPropertyTypes.INTEGER, SQLPropertyNotations.ForeignKey, new(nameof(Trader), nameof(Trader.Id))),
+                new(nameof(Quest.TraderName), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.ForeignKey, new(nameof(Trader), nameof(Trader.Name))),
                 new(nameof(Quest.AccessEnum), SQLPropertyTypes.TINTYINT, SQLPropertyNotations.NotNull),
                 new(nameof(Quest.IsActive), SQLPropertyTypes.BIT, SQLPropertyNotations.NotNull),
                 new(nameof(Quest.IsComplete), SQLPropertyTypes.BIT, SQLPropertyNotations.NotNull)
@@ -32,33 +32,25 @@ namespace efto_model.Data.Tables
 
             List<SQLProperty> rewardCategories = new List<SQLProperty>
             {
-                new(nameof(Quest_Reward_Category.Id), SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKey),
-                new(nameof(Quest_Reward_Category.Category), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.NotNull)
+                new(nameof(Quest_Reward_Category.Category), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.PrimaryKey)
             };
             string rewardCategoryQuery = DBQueryBuilder.CreateTable(rewardCategories, nameof(Quest_Reward_Category));
-
-            List<SQLProperty> rewardAccess = new List<SQLProperty>
-            {
-                new(nameof(Quest_Reward_Access.Id), SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKey),
-                new(nameof(Quest_Reward_Access.Access), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.NotNull)
-            };
-            string rewardAccessQuery = DBQueryBuilder.CreateTable(rewardAccess, nameof(Quest_Reward_Access));
 
             List<SQLProperty> rewards = new List<SQLProperty>
             {
                 new(nameof(Quest_Reward.Id), SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKey),
                 new(nameof(Quest_Reward.QuestId), SQLPropertyTypes.INTEGER, SQLPropertyNotations.ForeignKey, new(nameof(Quest), nameof(Quest.Id))),
                 new(nameof(Quest_Reward.Reward), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.NotNull),
-                new(nameof(Quest_Reward.CategoryId), SQLPropertyTypes.INTEGER, SQLPropertyNotations.ForeignKey, new(nameof(Quest_Reward_Category), nameof(Quest_Reward_Category.Id))),
-                new(nameof(Quest_Reward.AccessId), SQLPropertyTypes.INTEGER, SQLPropertyNotations.ForeignKey, new(nameof(Quest_Reward_Access), nameof(Quest_Reward_Access.Id)))
+                new(nameof(Quest_Reward.Category), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.ForeignKey, new(nameof(Quest_Reward_Category), nameof(Quest_Reward_Category.Category))),
+                new(nameof(Quest_Reward.UnlockTypeEnum), SQLPropertyTypes.TINTYINT, SQLPropertyNotations.NotNull)
             };
             string rewardQuery = DBQueryBuilder.CreateTable(rewards, nameof(Quest_Reward));
 
             List<SQLProperty> tasks = new List<SQLProperty>
             {
                 new(nameof(Quest_Task.Id), SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKey),
-                new(nameof(Quest_Task.MapId), SQLPropertyTypes.INTEGER, SQLPropertyNotations.ForeignKey, new(nameof(Map), nameof(Map.Id))),
-                new(nameof(Quest_Task.TraderId), SQLPropertyTypes.INTEGER, SQLPropertyNotations.ForeignKey, new(nameof(Trader), nameof(Trader.Id))),
+                new(nameof(Quest_Task.MapName), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.ForeignKey, new(nameof(Map), nameof(Map.Name))),
+                new(nameof(Quest_Task.TraderName), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.ForeignKey, new(nameof(Trader), nameof(Trader.Name))),
                 new(nameof(Quest_Task.QuestId), SQLPropertyTypes.INTEGER, SQLPropertyNotations.ForeignKey, new(nameof(Quest), nameof(Quest.Id))),
                 new(nameof(Quest_Task.Desc), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.NotNull),
                 new(nameof(Quest_Task.Sequence), SQLPropertyTypes.INTEGER, SQLPropertyNotations.NotNull),
@@ -88,7 +80,6 @@ namespace efto_model.Data.Tables
                 db.Execute(questQuery);
                 db.Execute(requirementQuery);
                 db.Execute(rewardCategoryQuery);
-                db.Execute(rewardAccessQuery);
                 db.Execute(rewardQuery);
                 db.Execute(taskQuery);
                 db.Execute(questToQuestJunctionTableQuery);
@@ -102,13 +93,6 @@ namespace efto_model.Data.Tables
         {
             using (SQLiteConnection db = SQLConnection(database))
             {
-                List<Quest_Reward_Access> accessValues = new List<Quest_Reward_Access>
-                {
-                    new("Handover"),
-                    new("Byable"),
-                    new("Craftable")
-                };
-
                 List<Quest_Reward_Category> categoryValues = new List<Quest_Reward_Category>
                 {
                     new("Ammo"),
@@ -119,18 +103,11 @@ namespace efto_model.Data.Tables
                     new("Money"),
                     new("Other")
                 };
-
-                string accessQuery = $"INSERT INTO Quest_Reward_Access (Access) VALUES (?)";
                 string categoryQuery = $"INSERT INTO Quest_Reward_Category (Category) VALUES (?)";
-
-                foreach (Quest_Reward_Access item in accessValues)
-                {
-                    db.Execute(accessQuery, item.Access);
-                }
 
                 foreach (Quest_Reward_Category item in categoryValues)
                 {
-                    db.Execute(accessQuery, item.Category);
+                    db.Execute(categoryQuery, item.Category);
                 }
             }
         }

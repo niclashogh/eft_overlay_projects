@@ -12,8 +12,7 @@ namespace efto_model.Data.Tables
         {
             List<SQLProperty> traders = new List<SQLProperty>
             {
-                new(nameof(Trader.Id), SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKey),
-                new(nameof(Trader.Name), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.NotNull)
+                new(nameof(Trader.Name), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.PrimaryKey)
             };
             string traderQuery = DBQueryBuilder.CreateTable(traders, nameof(Trader));
 

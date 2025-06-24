@@ -16,7 +16,7 @@ namespace efto_model.Models.AccessKeys
             }
         }
 
-        public AccessKey_DTO(string name, int mapId) : base(name, mapId) { }
+        public AccessKey_DTO(string name, string mapName) : base(name, mapName) { }
 
         public AccessKey_DTO(PositionRecord<double, double> pos) : base(pos) { }
 

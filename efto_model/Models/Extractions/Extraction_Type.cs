@@ -2,10 +2,9 @@
 {
     public class Extraction_Type
     {
-        public int Id { get; set; }
-        public string Desc { get; set; }
+        public string Type { get; set; }
 
-        public Extraction_Type(string desc) => this.Desc = desc;
+        public Extraction_Type(string type) => this.Type = type;
 
         public Extraction_Type() { }
     }

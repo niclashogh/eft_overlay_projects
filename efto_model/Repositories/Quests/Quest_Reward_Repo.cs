@@ -10,9 +10,9 @@ namespace efto_model.Repositories.Quests
         private string tableName { get; } = "Quest_Reward";
 
         public async Task AddAsync(Quest_Reward model) => Add(model, this.tableName, EssentialDB);
-        public async Task DeleteAsync(int id) => Delete(id, this.tableName, EssentialDB);
-        public async Task<Quest_Reward> LoadSingleAsync(int id) => LoadSingle<Quest_Reward>(id, this.tableName, EssentialDB);
-        public async Task<Quest_Reward> LoadLastAsync() => LoadLast<Quest_Reward>(this.tableName, EssentialDB);
+        public async Task DeleteAsync(int id) => DeleteById(id, this.tableName, EssentialDB);
+        public async Task<Quest_Reward> LoadSingleAsync(int id) => LoadSingleById<Quest_Reward>(id, this.tableName, EssentialDB);
+        public async Task<Quest_Reward> LoadLastAsync() => LoadLastById<Quest_Reward>(this.tableName, EssentialDB);
 
         public async Task<ObservableCollection<Quest_Reward>> FindAsync(string? searchWord, string category)
         {
@@ -52,22 +52,14 @@ namespace efto_model.Repositories.Quests
             }
         }
 
-        public async Task<ObservableCollection<Quest_Reward>> LoadByQuestAsync(int id)
-        {
-            string propertyName = nameof(Quest_Reward.QuestId);
-            return LoadById<Quest_Reward>(id, propertyName, this.tableName, EssentialDB);
-        }
+        public async Task<ObservableCollection<Quest_Reward>> LoadByQuestAsync(int id) => LoadById<Quest_Reward>(id, this.tableName, EssentialDB);
 
-        public async Task DeleteAllByQuestAsync(int id)
-        {
-            string propertyName = nameof (Quest_Reward.QuestId);
-            DeleteAllById(id, propertyName, this.tableName, EssentialDB);
-        }
+        public async Task DeleteAllByQuestAsync(int id) => DeleteAllByKey((id, nameof(Quest_Reward.QuestId)), this.tableName, EssentialDB);
 
         public async Task UpdateAsync(Quest_Reward model)
         {
-            string[] propertyNames = new[] { nameof(Quest_Reward.Reward), nameof(Quest_Reward.CategoryId), nameof(Quest_Reward.AccessId) };
-            Update(model, GetProperties(model, propertyNames), this.tableName, EssentialDB);
+            string[] propertyNames = new[] { nameof(Quest_Reward.Reward), nameof(Quest_Reward.Category), nameof(Quest_Reward.UnlockTypeEnum) };
+            UpdateById(model, GetProperties(model, propertyNames), this.tableName, EssentialDB);
         }
     }
 }

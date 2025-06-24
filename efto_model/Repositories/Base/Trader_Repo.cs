@@ -8,15 +8,15 @@ namespace efto_model.Repositories.Base
         private string tableName { get; } = "Trader";
 
         public async Task AddAsync(Trader model) => Add(model, this.tableName, EssentialDB);
-        public async Task DeleteAsync(int id) => Delete(id, this.tableName, EssentialDB);
-        public async Task<Trader> LoadSingleAsync(int id) => LoadSingle<Trader>(id, this.tableName, EssentialDB);
-        public async Task<Trader> LoadLastAsync() => LoadLast<Trader>(this.tableName, EssentialDB);
+        public async Task DeleteAsync(string trader) => DeleteByKey((trader, nameof(Trader.Name)), this.tableName, EssentialDB);
+        public async Task<Trader> LoadSingleAsync(string trader) => LoadSingleByKey<Trader>((trader, nameof(Trader.Name)), this.tableName, EssentialDB);
+        public async Task<Trader> LoadLastAsync() => LoadLastByKey<Trader>(nameof(Trader.Name), this.tableName, EssentialDB);
         public async Task<ObservableCollection<Trader>> LoadAllAsync() => LoadAll<Trader>(this.tableName, EssentialDB);
 
-        public async Task Update(Trader model)
+        public async Task UpdateAsync(Trader model)
         {
             string[] propertyNames = new[] { nameof(Trader.Name) };
-            Update(model, GetProperties(model, propertyNames), this.tableName, EssentialDB);
+            UpdateByKey(model, GetProperties(model, propertyNames), nameof(Trader.Name), this.tableName, EssentialDB);
         }
     }
 }

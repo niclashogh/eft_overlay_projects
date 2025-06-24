@@ -1,40 +1,39 @@
-﻿using efto_model.Models.DataTransferObjects;
+﻿using efto_model.Data;
+using efto_model.Models.Enums;
 using efto_model.Models.Quests;
+using efto_model.Records;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Shapes;
-using Windows.Foundation;
+using Microsoft.UI.Xaml.Media.Imaging;
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using Windows.Storage.Streams;
 using Windows.UI;
 
 namespace efto_window.Views.ComponentBuilders
 {
     public class TaskComponent
     {
-        #region Variables & Properties
-        private int width { get; } = 26;
-        private int height { get; } = 26;
-        private int strokeThickness { get; } = 3;
-
         public DimensionRecord<int> Size
         {
-            get { return new DimensionRecord<int>(this.width + this.strokeThickness, this.height + this.strokeThickness); }
+            get { return new DimensionRecord<int>(26, 26); }
         }
-        #endregion
 
         public Grid GRID { get; set; }
 
         public TaskComponent(Quest_Task task, Color color)
         {
-            this.GRID = CustomGrid(task.Id);
-            ToolTipService.SetToolTip(this.GRID, CustomToolTip(task.Desc));
+            this.GRID = CreateGrid(task.Id);
 
-            this.GRID.Children.Add(CustomTextBlock(task.Sequence));
-            this.GRID.Children.Add(CustomIcon(color));
+            _ = CreateToolTipAsync(task.Desc);
+            _ = CreateIconAsync(task.Sequence);
         }
 
-        private Grid CustomGrid(int id)
+        #region Local methods
+        private Grid CreateGrid(int id)
         {
             return new Grid
             {
@@ -43,9 +42,9 @@ namespace efto_window.Views.ComponentBuilders
             };
         }
 
-        private ToolTip CustomToolTip(string desc)
+        private async Task CreateToolTipAsync(string desc)
         {
-            return new ToolTip
+            ToolTip tooltip = new ToolTip
             {
                 Background = new SolidColorBrush(Color.FromArgb(255, 30, 30, 30)),
                 Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255)),
@@ -53,55 +52,11 @@ namespace efto_window.Views.ComponentBuilders
                 FontSize = 12,
                 Content = desc
             };
+
+            ToolTipService.SetToolTip(this.GRID, tooltip);
         }
 
-        private Path CustomIcon(Color color)
-        {
-            PathFigure figure = new PathFigure
-            {
-                StartPoint = new Point(0, 0),
-                Segments =
-                {
-                    new LineSegment // Top line
-                    {
-                        Point = new Point(this.width, 0)
-                    },
-
-                    new LineSegment // Right line
-                    {
-                        Point = new Point(this.width, this.height)
-                    },
-
-                    new LineSegment // Bottom line
-                    {
-                        Point = new Point(0, this.height)
-                    }
-                },
-                IsClosed = true // Left line
-            };
-
-            PathGeometry geometry = new PathGeometry
-            {
-                Figures =
-                {
-                    figure
-                }
-            };
-
-            return new Path
-            {
-                Stroke = new SolidColorBrush(color),
-                StrokeThickness = this.strokeThickness,
-                IsHitTestVisible = false,
-                IsTabStop = false,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(1.5, 1.5, 0, 0),
-                Data = geometry
-            };
-        }
-
-        private TextBlock CustomTextBlock(int sequence)
+        private TextBlock CreateTextBlock(int sequence)
         {
             return new TextBlock
             {
@@ -113,5 +68,30 @@ namespace efto_window.Views.ComponentBuilders
                 Text = sequence.ToString()
             };
         }
+
+        private async Task CreateIconAsync(int sequence)
+        {
+            string imagePath = Path.Combine(AssetContext.ApplicationFolder, ImageFolders.BTR.ToString(), "BTR.png");
+            BitmapImage bitmap = new();
+
+            using (FileStream stream = File.OpenRead(imagePath))
+            {
+                using (IRandomAccessStream rndAccessStream = stream.AsRandomAccessStream())
+                {
+                    await bitmap.SetSourceAsync(rndAccessStream);
+                }
+            }
+
+            Image image = new Image
+            {
+                Source = bitmap,
+                Width = Size.Width,
+                Height = Size.Height
+            };
+
+            this.GRID.Children.Add(CreateTextBlock(sequence));
+            this.GRID.Children.Add(image);
+        }
+        #endregion
     }
 }

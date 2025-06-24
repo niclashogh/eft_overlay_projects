@@ -1,4 +1,5 @@
 ﻿using efto_model.Models;
+using efto_model.Models.Base;
 using efto_model.Models.Enums;
 using efto_model.Models.Extractions;
 using efto_model.Services;
@@ -12,8 +13,7 @@ namespace efto_model.Data.Tables
         {
             List<SQLProperty> types = new List<SQLProperty>
             {
-                new(nameof(Extraction_Type.Id), SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKey),
-                new(nameof(Extraction_Type.Desc), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.Nullable)
+                new(nameof(Extraction_Type.Type), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.PrimaryKey)
             };
             string typeQuery = DBQueryBuilder.CreateTable(types, nameof(Extraction_Type));
 
@@ -21,8 +21,8 @@ namespace efto_model.Data.Tables
             {
                 new(nameof(Extraction.Id), SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKey),
                 new(nameof(Extraction.Name), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.NotNull),
-                new(nameof(Extraction.TypeId), SQLPropertyTypes.INTEGER, SQLPropertyNotations.NotNull),
-                new(nameof(Extraction.MapId), SQLPropertyTypes.INTEGER, SQLPropertyNotations.NotNull),
+                new(nameof(Extraction.Type), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.ForeignKey, (nameof(Extraction_Type), nameof(Extraction_Type.Type))),
+                new(nameof(Extraction.MapName), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.ForeignKey, (nameof(Map), nameof(Map.Name))),
                 new(nameof(Extraction.X), SQLPropertyTypes.DOUBLE, SQLPropertyNotations.NotNull),
                 new(nameof(Extraction.Y), SQLPropertyTypes.DOUBLE, SQLPropertyNotations.NotNull)
             };
@@ -59,11 +59,11 @@ namespace efto_model.Data.Tables
                         new("Transit")
                     };
 
-                string insertQuery = $"INSERT INTO Extraction_Type (Desc) VALUES (?)";
+                string insertQuery = $"INSERT INTO Extraction_Type (Type) VALUES (?)";
 
                 foreach (Extraction_Type type in typeValues)
                 {
-                    db.Execute(insertQuery, type.Desc);
+                    db.Execute(insertQuery, type.Type);
                 }
             }
         }

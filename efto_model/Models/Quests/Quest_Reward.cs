@@ -6,16 +6,16 @@
         public int QuestId { get; set; }
         public string Reward { get; set; }
 
-        public int CategoryId { get; set; }
-        public int AccessId { get; set; }
+        public string Category { get; set; }
+        public Quest_Reward_UnlockTypes UnlockTypeEnum { get; set; }
 
-        public Quest_Reward(int questId, string reward, int categoryId, int accessId) : this(reward, categoryId, accessId) => this.QuestId = questId;
+        public Quest_Reward(int questId, string reward, string category, Quest_Reward_UnlockTypes unlockTypeEnum) : this(reward, category, unlockTypeEnum) => this.QuestId = questId;
 
-        public Quest_Reward(string reward, int categoryId, int accessId)
+        public Quest_Reward(string reward, string category, Quest_Reward_UnlockTypes unlockTypeEnum)
         {
             this.Reward = reward;
-            this.CategoryId = categoryId;
-            this.AccessId = accessId;
+            this.Category = category;
+            this.UnlockTypeEnum = unlockTypeEnum;
         }
 
         public Quest_Reward() { }

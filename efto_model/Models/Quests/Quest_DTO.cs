@@ -114,7 +114,7 @@ namespace efto_model.Models.Quests
             }
         }
 
-        public Quest_DTO(string name, int traderId, Quest_Access accessEnum) : base(name, traderId, accessEnum) { }
+        public Quest_DTO(string name, string traderName, Quest_Access accessEnum) : base(name, traderName, accessEnum) { }
 
         public Quest_DTO(bool isActive, bool isComplete) : base(isActive, isComplete) { }
 

@@ -4,13 +4,13 @@
     {
         public int Id { get; set; }
         public int AccessKeyId { get; set; }
-        public int TypeId { get; set; }
+        public string Type { get; set; }
         public byte Quantity { get; set; }
 
-        public AccessKey_Loot(int accessKeyId, int typeId, byte quantity)
+        public AccessKey_Loot(int accessKeyId, string type, byte quantity)
         {
             this.AccessKeyId = accessKeyId;
-            this.TypeId = typeId;
+            this.Type = type;
             Quantity = quantity;
         }
 

@@ -12,8 +12,7 @@ namespace efto_model.Data.Tables
         {
             List<SQLProperty> maps = new List<SQLProperty>
             {
-                new(nameof(Map.Id), SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKey),
-                new(nameof(Map.Name), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.NotNull),
+                new(nameof(Map.Name), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.PrimaryKey),
                 new(nameof(Map.UpdatedToVersion), SQLPropertyTypes.DOUBLE, SQLPropertyNotations.Nullable)
             };
             string mapQuery = DBQueryBuilder.CreateTable(maps, nameof(Map));

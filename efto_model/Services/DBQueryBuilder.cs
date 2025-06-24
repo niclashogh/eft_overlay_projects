@@ -41,7 +41,6 @@ namespace efto_model.Services
             return $"CREATE TABLE IF NOT EXISTS {tableName} ({allDefinitions});";
         }
 
-        #region CRUD
         public static string Insert(List<PropertyInfo> properties, string tableName)
         {
             string columnNames = string.Join(", ", properties.Select(property => property.Name));
@@ -50,27 +49,34 @@ namespace efto_model.Services
             return $"INSERT INTO {tableName} ({columnNames}) VALUES ({parameterMarks})";
         }
 
-        public static string Update(List<PropertyInfo> properties, string tableName)
+        public static string UpdateById(List<PropertyInfo> properties, string tableName)
         {
             string columns = string.Join(", ", properties.Select(property => property.Name + " = ?"));
             return $"UPDATE {tableName} SET {columns} WHERE Id = ?";
         }
 
-        public static string Delete(string tableName) => $"DELETE FROM {tableName} WHERE Id = ?";
+        public static string UpdateByKey(List<PropertyInfo> properties, string propertyName, string tableName)
+        {
+            string columns = string.Join(", ", properties.Select(property => property.Name + " = ?"));
+            return $"UPDATE {tableName} SET {columns} WHERE {propertyName} = ?";
+        }
+
+        public static string DeleteById(string tableName) => $"DELETE FROM {tableName} WHERE Id = ?";
+        public static string DeleteByKey(string propertyName, string tableName) => $"DELETE FROM {tableName} WHERE {propertyName} = ?";
 
         public static string LoadAll(string tableName) => $"SELECT * FROM {tableName}";
 
-        public static string LoadSingle(string tableName) => $"SELECT * FROM {tableName} WHERE Id = ?";
+        public static string LoadSingleById(string tableName) => $"SELECT * FROM {tableName} WHERE Id = ?";
+        public static string LoadSingleByKey(string propertyName, string tableName) => $"SELECT * FROM {tableName} WHERE {propertyName} = ?";
 
-        public static string LoadLast(string tableName) => $"SELECT * FROM {tableName} ORDER BY Id DESC LIMIT 1";
-        #endregion
+        public static string LoadLastById(string tableName) => $"SELECT * FROM {tableName} ORDER BY Id DESC LIMIT 1";
+        public static string LoadLastByKey(string propertyName, string tableName) => $"SELECT * FROM {tableName} ORDER BY {propertyName} DESC LIMIT 1";
 
-        #region Get by parameter
         public static string FindBySearchWord(string propertyName, string tableName) => $"SELECT * FROM {tableName} WHERE {propertyName} LIKE ?";
 
-        public static string LoadById(string propertyName, string tableName) => $"SELECT * FROM {tableName} WHERE {propertyName} = ?";
+        public static string LoadById(string tableName) => $"SELECT * FROM {tableName} WHERE Id = ?";
+        public static string LoadByKey(string propertyName, string tableName) => $"SELECT * FROM {tableName} WHERE {propertyName} = ?";
 
-        public static string DeleteAllById(string propertyName, string tableName) => $"DELETE FROM {tableName} WHERE {propertyName} = ?";
-        #endregion
+        public static string DeleteAllByKey(string propertyName, string tableName) => $"DELETE FROM {tableName} WHERE {propertyName} = ?";
     }
 }

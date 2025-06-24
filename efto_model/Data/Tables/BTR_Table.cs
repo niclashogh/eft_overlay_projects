@@ -12,7 +12,7 @@ namespace efto_model.Data.Tables
             List<SQLProperty> btr = new List<SQLProperty>
             {
                 new(nameof(BTR.Id), Models.Enums.SQLPropertyTypes.INTEGER, Models.Enums.SQLPropertyNotations.PrimaryKey),
-                new(nameof(BTR.MapId), Models.Enums.SQLPropertyTypes.INTEGER, Models.Enums.SQLPropertyNotations.ForeignKey, new(nameof(Map), nameof(Map.Id))),
+                new(nameof(BTR.MapName), Models.Enums.SQLPropertyTypes.INTEGER, Models.Enums.SQLPropertyNotations.ForeignKey, new(nameof(Map), nameof(Map.Name))),
                 new(nameof(BTR.Location), Models.Enums.SQLPropertyTypes.VARCHAR, Models.Enums.SQLPropertyNotations.NotNull),
                 new(nameof(BTR.X), Models.Enums.SQLPropertyTypes.DOUBLE, Models.Enums.SQLPropertyNotations.NotNull),
                 new(nameof(BTR.Y), Models.Enums.SQLPropertyTypes.DOUBLE, Models.Enums.SQLPropertyNotations.NotNull)

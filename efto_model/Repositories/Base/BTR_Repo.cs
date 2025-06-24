@@ -8,26 +8,22 @@ namespace efto_model.Repositories.Base
         private string tableName { get; } = "BTR";
 
         public async Task AddAsync(BTR model) => Add(model, this.tableName, EssentialDB);
-        public async Task DeleteAsync(int id) => Delete(id, this.tableName, EssentialDB);
-        public async Task<BTR> LoadSingleAsync(int id) => LoadSingle<BTR>(id, this.tableName, EssentialDB);
-        public async Task<BTR> LoadLastAsync() => LoadLast<BTR>(this.tableName, EssentialDB);
+        public async Task DeleteAsync(int id) => DeleteById(id, this.tableName, EssentialDB);
+        public async Task<BTR> LoadSingleAsync(int id) => LoadSingleById<BTR>(id, this.tableName, EssentialDB);
+        public async Task<BTR> LoadLastAsync() => LoadLastById<BTR>(this.tableName, EssentialDB);
 
-        public async Task<ObservableCollection<BTR>> LoadByMapAsync(int id)
-        {
-            string propertyName = nameof(BTR.MapId);
-            return LoadById<BTR>(id, propertyName, this.tableName, EssentialDB);
-        }
+        public async Task<ObservableCollection<BTR>> LoadByMapAsync(string map) => LoadByKey<BTR>((map, nameof(BTR.MapName)), this.tableName, EssentialDB);
 
         public async Task UpdateAsync(BTR model)
         {
             string[] propertyNames = new[] { nameof(BTR.Location) };
-            Update(model, GetProperties(model, propertyNames), this.tableName, EssentialDB);
+            UpdateById(model, GetProperties(model, propertyNames), this.tableName, EssentialDB);
         }
 
         public async Task UpdateCoordinates(BTR model)
         {
             string[] propertyNames = new[] { nameof(BTR.X), nameof(BTR.Y) };
-            Update(model, GetProperties(model, propertyNames), this.tableName, EssentialDB);
+            UpdateById(model, GetProperties(model, propertyNames), this.tableName, EssentialDB);
         }
     }
 }

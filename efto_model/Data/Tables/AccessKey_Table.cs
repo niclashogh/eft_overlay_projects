@@ -16,7 +16,7 @@ namespace efto_model.Data.Tables
             {
                 new(nameof(AccessKey.Id), SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKey),
                 new(nameof(AccessKey.Name), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.NotNull),
-                new(nameof(AccessKey.MapId), SQLPropertyTypes.INTEGER, SQLPropertyNotations.ForeignKey, new(nameof(Map), nameof(Map.Id))),
+                new(nameof(AccessKey.MapName), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.ForeignKey, new(nameof(Map), nameof(Map.Name))),
                 new(nameof(AccessKey.X), SQLPropertyTypes.DOUBLE, SQLPropertyNotations.NotNull),
                 new(nameof(AccessKey.Y), SQLPropertyTypes.DOUBLE, SQLPropertyNotations.NotNull),
                 new(nameof(AccessKey.Show), SQLPropertyTypes.BIT, SQLPropertyNotations.NotNull)
@@ -25,8 +25,7 @@ namespace efto_model.Data.Tables
 
             List<SQLProperty> lootTypes = new List<SQLProperty>
             {
-                new(nameof(AccessKey_Loot_Type.Id), SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKey),
-                new(nameof(AccessKey_Loot_Type.Type), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.NotNull)
+                new(nameof(AccessKey_Loot_Type.Type), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.PrimaryKey)
             };
             string lootTypeQuery = DBQueryBuilder.CreateTable(lootTypes, nameof(AccessKey_Loot_Type));
 
@@ -34,7 +33,7 @@ namespace efto_model.Data.Tables
             {
                 new(nameof(AccessKey_Loot.Id), SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKey),
                 new(nameof(AccessKey_Loot.AccessKeyId), SQLPropertyTypes.INTEGER, SQLPropertyNotations.ForeignKey, new(nameof(AccessKey), nameof(AccessKey.Id))),
-                new(nameof(AccessKey_Loot.TypeId), SQLPropertyTypes.INTEGER, SQLPropertyNotations.ForeignKey, new(nameof(AccessKey_Loot_Type), nameof(AccessKey_Loot_Type.Id))),
+                new(nameof(AccessKey_Loot.Type), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.ForeignKey, new(nameof(AccessKey_Loot_Type), nameof(AccessKey_Loot_Type.Type))),
                 new(nameof(AccessKey_Loot.Quantity), SQLPropertyTypes.INTEGER, SQLPropertyNotations.NotNull)
             };
             string lootQuery = DBQueryBuilder.CreateTable(loot, nameof(AccessKey_Loot));
