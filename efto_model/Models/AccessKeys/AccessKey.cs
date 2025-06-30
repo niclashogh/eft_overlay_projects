@@ -1,4 +1,7 @@
 ﻿using efto_model.Interfaces;
+using efto_model.Models.Base;
+using efto_model.Models.Enums;
+using efto_model.Models.Quests;
 using efto_model.Records;
 using efto_model.Services;
 
@@ -35,5 +38,29 @@ namespace efto_model.Models.AccessKeys
         }
 
         public AccessKey() { }
+    }
+
+    public static partial class AccessKey_SQLContext
+    {
+        public static string AccessKey_Table_Name { get; } = "AccessKey";
+
+        public static List<SQLProperty> AccessKey_Table { get; } = new List<SQLProperty>
+        {
+            new("Id", SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKeyId),
+            new("Name", SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.NotNull),
+            new("MapName", SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.ForeignKey, new(nameof(Map), nameof(Map.Name))),
+            new("X", SQLPropertyTypes.DOUBLE, SQLPropertyNotations.NotNull),
+            new("Y", SQLPropertyTypes.DOUBLE, SQLPropertyNotations.NotNull),
+            new("Show", SQLPropertyTypes.BIT, SQLPropertyNotations.NotNull)
+        };
+
+        public static string AccessKey_Quest_JunctionTable_Name { get; } = "AccessKey_Quest_JunctionTable";
+
+        public static List<SQLProperty> AccessKey_Quest_JunctionTable { get; } = new List<SQLProperty>
+        {
+            new("Id", SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKeyId),
+            new("AccessKeyId", SQLPropertyTypes.INTEGER, SQLPropertyNotations.ForeignKey, new("AccessKey", "Id")),
+            new("QuestId", SQLPropertyTypes.INTEGER, SQLPropertyNotations.ForeignKey, new(nameof(Quest), nameof(Quest.Id)))
+        };
     }
 }

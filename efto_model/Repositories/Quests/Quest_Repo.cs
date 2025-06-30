@@ -7,7 +7,7 @@ namespace efto_model.Repositories.Quests
 {
     public class Quest_Repo : Generic_Repo
     {
-        private string tableName { get; } = "Quest";
+        private string tableName { get; } = Quest_SQLContext.Quest_Table_Name;
 
         #region Standard
         public async Task AddAsync(Quest model) => Add(model, this.tableName, EssentialDB);
@@ -29,7 +29,7 @@ namespace efto_model.Repositories.Quests
 
         public async Task UpdateAsync(Quest model)
         {
-            string[] propertyNames = new[] { nameof(Quest.Name), nameof(Quest.AccessEnum), nameof(Quest.TraderName) };
+            string[] propertyNames = new[] { nameof(Quest.Name), nameof(Quest.Access), nameof(Quest.TraderName) };
             UpdateById(model, GetProperties(model, propertyNames), this.tableName, EssentialDB);
         }
 

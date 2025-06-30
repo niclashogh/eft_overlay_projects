@@ -2,7 +2,8 @@
 {
     public enum SQLPropertyNotations
     {
-        PrimaryKey,
+        PrimaryKeyId,
+        PrimaryKeyName,
         ForeignKey,
         NotNull,
         Nullable

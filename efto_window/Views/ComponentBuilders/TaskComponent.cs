@@ -24,7 +24,7 @@ namespace efto_window.Views.ComponentBuilders
 
         public Grid GRID { get; set; }
 
-        public TaskComponent(Quest_Task task, Color color)
+        public TaskComponent(Quest_Task task)
         {
             this.GRID = CreateGrid(task.Id);
 

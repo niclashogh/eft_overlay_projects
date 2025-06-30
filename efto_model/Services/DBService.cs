@@ -1,6 +1,7 @@
 ﻿using efto_model.Data;
 using efto_model.Data.Tables;
 using SQLite;
+using System.Diagnostics;
 
 namespace efto_model.Services
 {
@@ -16,34 +17,29 @@ namespace efto_model.Services
 
         private void InitializeEsentialDB(string database)
         {
-            if (!Directory.Exists(database))
+            if (!File.Exists(database))
             {
+                Debug.WriteLine("CREATING DB FILES");
                 using (SQLiteConnection db = SQLCreateDB(database)) { }
 
-                if (Directory.Exists(database))
-                {
-                    Map_Table map = new(database);
-                    Trader_Table trader = new(database);
+                Map_Table map = new(database);
+                Trader_Table trader = new(database);
 
-                    Extraction_Table extraction = new(database);
-                    Quest_Table quest = new(database);
-                    BTR_Table btr = new(database);
-                    AccessKey_Table accesskey = new(database);
-                }
+                Extraction_Table extraction = new(database);
+                Quest_Table quest = new(database);
+                BTR_Table btr = new(database);
+                AccessKey_Table accesskey = new(database);
             }
         }
 
         private void InitializeUserDB(string database)
         {
-            if (!Directory.Exists(database))
+            if (!File.Exists(database))
             {
                 using (SQLiteConnection db = SQLCreateDB(database)) { }
 
-                if (Directory.Exists(database))
-                {
-                    Quest_Table quest = new(database);
-                    Marker_Table marker = new(database);
-                }
+                Quest_Table quest = new(database);
+                Marker_Table marker = new(database);
             }
         }
     }

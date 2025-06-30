@@ -10,6 +10,7 @@
     Title="Settings">
 
     <Grid x:Name="PARENT_GRID">
+        <!--#region Resources & Layout-->
         <Grid.Resources>
             <ResourceDictionary>
                 <ResourceDictionary.MergedDictionaries>
@@ -22,6 +23,7 @@
             <RowDefinition Height="45"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <!--#endregion-->
 
         <Image Source="/Assets/Backgrounds/Settings.png"
                Stretch="UniformToFill"

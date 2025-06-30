@@ -13,28 +13,34 @@ namespace efto_model.Services
 
             foreach (SQLProperty property in properties)
             {
+                // Set Property type
                 string type = property.Type switch
                 {
-                    SQLPropertyTypes.VARCHAR => "VARCHAR(200)",
                     SQLPropertyTypes.nVARCHAR => "nVARCHAR(200)",
                     _ => property.Type.ToString()
                 };
 
+                // Set Property notation
                 string notation = property.Notation switch
                 {
-                    SQLPropertyNotations.PrimaryKey => " PRIMARY KEY AUTOINCREMENT",
+                    SQLPropertyNotations.PrimaryKeyId => " PRIMARY KEY AUTOINCREMENT",
+                    SQLPropertyNotations.PrimaryKeyName => "PRIMARY KEY",
                     SQLPropertyNotations.NotNull => " NOT NULL",
                     _ => "" // Nullable & ForeignKey has not end-notations
                 };
 
                 columnDefinitions.Add($"{property.Name} {type}{notation}"); //Note: Missing space between {type} and {notation} is correct
 
-                if (property.ForeignKeyReference.HasValue && property.Notation == SQLPropertyNotations.ForeignKey)
+                // Set ForeignKey references
+                if (property.Notation == SQLPropertyNotations.ForeignKey)
                 {
-                    var foreignKey = property.ForeignKeyReference.Value;
-                    foreignKeys.Add($"FOREIGN KEY ({property.Name}) REFERENCES {foreignKey.table}({foreignKey.property})");
+                    if (property.ForeignKeyReference.HasValue)
+                    {
+                        var foreignKey = property.ForeignKeyReference.Value;
+                        foreignKeys.Add($"FOREIGN KEY ({property.Name}) REFERENCES {foreignKey.table}({foreignKey.property})");
+                    }
+                    else throw new Exception("DBQueryBuilder.CreateTable: Syntax error in ForeignKey");
                 }
-                else throw new Exception("DBQueryBuilder.CreateTable: Syntax error in ForeignKey");
             }
 
             string allDefinitions = string.Join(", ", columnDefinitions.Concat(foreignKeys));

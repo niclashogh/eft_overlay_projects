@@ -5,7 +5,7 @@ namespace efto_model.Repositories.Base
 {
     public class BTR_Repo : Generic_Repo
     {
-        private string tableName { get; } = "BTR";
+        private string tableName { get; } = BTR_SQLContext.BTR_Table_Name;
 
         public async Task AddAsync(BTR model) => Add(model, this.tableName, EssentialDB);
         public async Task DeleteAsync(int id) => DeleteById(id, this.tableName, EssentialDB);

@@ -20,7 +20,7 @@ namespace efto_window.ViewModels.Pages.Settings
         #region [Map] Variables & Properties
         public ObservableCollection<Map> Maps { get; private set; }
 
-        private Map selectedMap;
+        private Map selectedMap = new();
         public Map SelectedMap
         {
             get { return this.selectedMap; }
@@ -63,7 +63,7 @@ namespace efto_window.ViewModels.Pages.Settings
 
         private async Task UpdateMapDate()
         {
-            this.MapDateFeedback = await ImageService.GetImageDateFeedback(ImageFolders.Maps, this.SelectedMap.ToString());
+            this.MapDateFeedback = await ImageService.GetImageDateFeedback(ImageFolders.Maps, this.SelectedMap.Name);
             OnPropertyChanged(nameof(this.MapDateFeedback));
         }
     }

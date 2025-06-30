@@ -5,7 +5,7 @@ namespace efto_model.Repositories.Extractions
 {
     public class Extraction_Repo : Generic_Repo
     {
-        private string tableName { get; } = "Extraction";
+        private string tableName { get; } = Extraction_SQLContext.Extraction_Table_Name;
 
         public async Task AddAsync(Extraction model) => Add(model, this.tableName, EssentialDB);
         public async Task DeleteAsync(int id) => DeleteById(id, this.tableName, EssentialDB);

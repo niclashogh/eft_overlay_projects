@@ -27,7 +27,7 @@ namespace efto_window.ViewModels.Windows
         #region [Extraction] Variables & Properties
         public bool FinishedLoadingExtractions { get; private set; } = false;
 
-        private ObservableCollection<Extraction_DTO> extractions;
+        private ObservableCollection<Extraction_DTO> extractions = new();
         public ObservableCollection<Extraction_DTO> Extractions
         {
             get { return this.extractions; }
@@ -42,7 +42,7 @@ namespace efto_window.ViewModels.Windows
         #region [Quest, Task] Variables & Properties
         public bool FinishedLoadingTasks { get; private set; } = false;
 
-        private ObservableCollection<Quest_Task> tasks;
+        private ObservableCollection<Quest_Task> tasks = new();
         public ObservableCollection<Quest_Task> Tasks
         {
             get { return this.tasks; }
@@ -57,7 +57,7 @@ namespace efto_window.ViewModels.Windows
         #region [BTR] Variables & Properties
         public bool FinishedLoadingBTR { get; private set; } = false;
 
-        private ObservableCollection<BTR> btr;
+        private ObservableCollection<BTR> btr = new();
         public ObservableCollection<BTR> BTR
         {
             get { return this.btr; }
@@ -72,7 +72,7 @@ namespace efto_window.ViewModels.Windows
         #region [Marker] Variables & Properties
         public bool FinishedLoadingMarkers { get; private set; } = false;
 
-        private ObservableCollection<Marker> markers;
+        private ObservableCollection<Marker> markers = new();
         public ObservableCollection<Marker> Markers
         {
             get { return this.markers; }
@@ -85,8 +85,8 @@ namespace efto_window.ViewModels.Windows
         #endregion
 
         #region [Map] Variables & Properties
-        public ObservableCollection<Map> Maps { get; private set; }
-        private Map selectedMap;
+        public ObservableCollection<Map> Maps { get; private set; } = new();
+        private Map selectedMap = new();
         public Map SelectedMap
         {
             get { return this.selectedMap; }
@@ -100,16 +100,20 @@ namespace efto_window.ViewModels.Windows
         }
         #endregion
 
-        public MapVM()
+        public MapVM() => InitialLoad();
+
+        #region Load & Collection Controls
+        private async Task InitialLoad()
         {
-            LoadData();
+            this.Maps = await mapReposiroty.LoadAllAsync();
+            if (this.Maps.Count > 0)
+            {
+                this.SelectedMap = this.Maps.FirstOrDefault();
+            }
         }
 
         private async Task LoadData() // Make references to kill the threads if they still are running and SelectedMap changes?
         {
-            this.Maps = await mapReposiroty.LoadAllAsync();
-            this.SelectedMap = this.Maps.FirstOrDefault();
-
             _ = LoadExtractions();
             _ = LoadQuestTasks();
             _ = LoadBTR();
@@ -130,6 +134,7 @@ namespace efto_window.ViewModels.Windows
 
             LoadData();
         }
+        #endregion
 
         #region Extraction Controls
         internal async Task LoadExtractions()
@@ -173,7 +178,7 @@ namespace efto_window.ViewModels.Windows
         #region QuestTask Controls
         internal async Task LoadQuestTasks()
         {
-            this.Tasks = await this.questTaskRepository.LoadActiveByMapAsync(this.SelectedMap.Na);
+            this.Tasks = await this.questTaskRepository.LoadActiveByMapAsync(this.SelectedMap.Name);
             this.FinishedLoadingTasks = true;
         }
 

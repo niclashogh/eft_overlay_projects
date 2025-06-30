@@ -11,13 +11,13 @@
     Title="Map">
     
     <Grid x:Name="PARENT_GRID">
+        <!--#region Resources & Layout-->
         <Grid.Resources>
             <ResourceDictionary>
                 <ResourceDictionary.MergedDictionaries>
                     <ResourceDictionary Source="/Views/ResourceDictionaries/WindowMenu.xaml"/>
                 </ResourceDictionary.MergedDictionaries>
 
-                <converters:TextReplaceUnderscore x:Key="TextReplaceUnderScore"/>
                 <converters:ImageSourceConverter x:Key="ImageSourceConverter"/>
             </ResourceDictionary>
         </Grid.Resources>
@@ -26,6 +26,7 @@
             <RowDefinition Height="45"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <!--#endregion-->
         
         <!--#region Content-->
         <Canvas x:Name="MAP_OUTER_CANVAS"
@@ -45,7 +46,7 @@
 
                 <Image x:Name="MAP_IMAGE"
                        IsTabStop="False"
-                       Source="{Binding SelectedMap, Mode=OneWay, Converter={StaticResource ImageSourceConverter}, ConverterParameter='/Local/Maps/'}"/>
+                       Source="{Binding SelectedMap.Name, Mode=OneWay, Converter={StaticResource ImageSourceConverter}, ConverterParameter='Maps'}"/>
             </Canvas>
         </Canvas>
         <!--#endregion-->
@@ -72,7 +73,7 @@
 
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Mode=OneWay, Converter={StaticResource TextReplaceUnderScore}}"/>
+                                <TextBlock Text="{Binding Name, Mode=OneWay}"/>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
 

@@ -5,7 +5,7 @@ namespace efto_model.Repositories.AccessKeys
 {
     public class AccessKey_Loot_Repo : Generic_Repo
     {
-        private string tableName { get; } = "AccessKey_Loot";
+        private string tableName { get; } = AccessKey_SQLContext.Loot_Table_Name;
 
         public async Task AddAsync(AccessKey_Loot model) => Add(model, this.tableName, EssentialDB);
         public async Task DeleteAsync(int id) => DeleteById(id, this.tableName, EssentialDB);

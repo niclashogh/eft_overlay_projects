@@ -5,7 +5,7 @@ namespace efto_model.Repositories.Base
 {
     public class Trader_Repo : Generic_Repo
     {
-        private string tableName { get; } = "Trader";
+        private string tableName { get; } = Trader_SQLContext.Trader_Table_Name;
 
         public async Task AddAsync(Trader model) => Add(model, this.tableName, EssentialDB);
         public async Task DeleteAsync(string trader) => DeleteByKey((trader, nameof(Trader.Name)), this.tableName, EssentialDB);

@@ -4,9 +4,7 @@
     {
         INTEGER,
         DOUBLE,
-        VARCHAR, // [A-Z & a-z]
         nVARCHAR, // All char
-        TEXT,
         TINTYINT, // ?
         BIT // Bool
     }

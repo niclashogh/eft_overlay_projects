@@ -1,6 +1,4 @@
-﻿using efto_model.Models;
-using efto_model.Models.Base;
-using efto_model.Models.Enums;
+﻿using efto_model.Models.Base;
 using efto_model.Services;
 using SQLite;
 
@@ -10,15 +8,9 @@ namespace efto_model.Data.Tables
     {
         public Trader_Table(string database)
         {
-            List<SQLProperty> traders = new List<SQLProperty>
-            {
-                new(nameof(Trader.Name), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.PrimaryKey)
-            };
-            string traderQuery = DBQueryBuilder.CreateTable(traders, nameof(Trader));
-
             using (SQLiteConnection db = SQLCreateTable(database))
             {
-                db.Execute(traderQuery);
+                db.Execute(DBQueryBuilder.CreateTable(Trader_SQLContext.Trader_Trable, Trader_SQLContext.Trader_Table_Name));
             }
 
             PopulateDefault(database);

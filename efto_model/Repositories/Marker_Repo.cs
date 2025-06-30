@@ -16,7 +16,7 @@ namespace efto_model.Repositories
 
         public async Task UpdateAsync(Marker model)
         {
-            string[] propertyNames = new[] { nameof(Marker.Name), nameof(Marker.Desc), nameof(Marker.Icon) };
+            string[] propertyNames = new[] { nameof(Marker.Name), nameof(Marker.Desc), nameof(Marker.Icon), nameof(Marker.ExpandableArea) };
             UpdateById(model, GetProperties(model, propertyNames), this.tableName, UserDB);
         }
 

@@ -1,6 +1,7 @@
 ﻿using efto_model.Data;
 using efto_model.Models;
 using efto_model.Models.Enums;
+using efto_model.Records;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -17,6 +18,11 @@ namespace efto_window.Views.ComponentBuilders
 {
     public class MarkerComponent
     {
+        public DimensionRecord<int> IconSize
+        {
+            get { return new(26, 26); }
+        }
+
         public Grid GRID { get; set; }
 
         public MarkerComponent(Marker marker, Action<object, RangeBaseValueChangedEventArgs> callback)
@@ -25,17 +31,17 @@ namespace efto_window.Views.ComponentBuilders
 
             _ = CreateToolTipAsync(marker.Desc);
 
-            switch (marker.Icon)
+            switch (marker.ExpandableArea)
             {
-                case "InternalEllipse":
-                    _ = CreateIconAsync(marker.Icon, marker.Width, marker.Height); //
-                    break;
-                case "InternalBox":
-                    _ = CreateIconAsync(marker.Icon, marker.Width, marker.Height); //
-                    break;
+                case Marker_Expandable_Areas.None:
+                    _ = CreateIconAsync(marker.Icon); break;
+                case Marker_Expandable_Areas.Ellipse:
+                    _ = CreateEllipseAsync(marker.Width, marker.Height, marker.Icon); break;
+                case Marker_Expandable_Areas.Rectangle:
+                    _ = CreateRectangleAsync(marker.Width, marker.Height, marker.Icon); break;
+
                 default:
-                    _ = CreateIconAsync(marker.Icon, marker.Width, marker.Height);
-                    break;
+                    _ = CreateIconAsync(marker.Icon); break;
             }
 
             this.GRID.ContextFlyout = CreateContextMenu(marker, callback);
@@ -59,9 +65,9 @@ namespace efto_window.Views.ComponentBuilders
             ToolTipService.SetToolTip(this.GRID, tooltip);
         }
 
-        private async Task CreateIconAsync(string icon, double width, double height)
+        private async Task CreateIconAsync(string icon)
         {
-            string imagePath = Path.Combine(AssetContext.ApplicationFolder, ImageFolders.BTR.ToString(), icon);
+            string imagePath = Path.Combine(AssetContext.ApplicationFolder, ImageFolders.Markers.ToString(), icon);
             BitmapImage bitmap = new();
 
             using (FileStream stream = File.OpenRead(imagePath))
@@ -74,16 +80,47 @@ namespace efto_window.Views.ComponentBuilders
 
             Image image = new Image
             {
-                Tag = "MARKER_ICON",
                 Source = bitmap,
-                Width = width,
-                Height = height
+                Width = this.IconSize.Width,
+                Height = this.IconSize.Height,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
             };
 
             this.GRID.Children.Add(image);
         }
 
-        // Add Ellipse & Box
+        private async Task CreateRectangleAsync(double width, double height, string icon)
+        {
+            Microsoft.UI.Xaml.Shapes.Rectangle rectangle = new Microsoft.UI.Xaml.Shapes.Rectangle
+            {
+                Width = width,
+                Height = height,
+                StrokeThickness = 4,
+                Stroke = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0)),
+                Fill = new SolidColorBrush(Color.FromArgb(10, 0, 0, 0)),
+                Tag = "MARKER_ELEMENT"
+            };
+
+            this.GRID.Children.Add(rectangle);
+            _ = CreateIconAsync(icon);
+        }
+
+        private async Task CreateEllipseAsync(double width, double height, string icon)
+        {
+            Microsoft.UI.Xaml.Shapes.Ellipse ellipse = new Microsoft.UI.Xaml.Shapes.Ellipse
+            {
+                Width = width,
+                Height = height,
+                StrokeThickness = 4,
+                Stroke = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0)),
+                Fill = new SolidColorBrush(Color.FromArgb(10, 0, 0, 0)),
+                Tag = "MARKER_ELEMENT"
+            };
+
+            this.GRID.Children.Add(ellipse);
+            _ = CreateIconAsync(icon);
+        }
 
         private Flyout CreateContextMenu(Marker marker, Action<object, RangeBaseValueChangedEventArgs> callback)
         {
@@ -128,7 +165,7 @@ namespace efto_window.Views.ComponentBuilders
         {
             Slider slider = new Slider
             {
-                Minimum = 30,
+                Minimum = 50,
                 Maximum = 800,
                 Width = 250,
                 Height = 20,

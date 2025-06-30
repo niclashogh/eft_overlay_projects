@@ -5,7 +5,7 @@ namespace efto_model.Repositories.Base
 {
     public class Map_Repo : Generic_Repo
     {
-        private string tableName { get; } = "Map";
+        private string tableName { get; } = Map_SQLContext.Map_Table_Name;
 
         public async Task AddAsync(Map model) => Add(model, this.tableName, EssentialDB);
         public async Task DeleteAsync(string map) => DeleteByKey((map, nameof(Map.Name)), this.tableName, EssentialDB);

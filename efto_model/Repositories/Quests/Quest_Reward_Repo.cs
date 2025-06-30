@@ -7,7 +7,7 @@ namespace efto_model.Repositories.Quests
 {
     public class Quest_Reward_Repo : Generic_Repo
     {
-        private string tableName { get; } = "Quest_Reward";
+        private string tableName { get; } = Quest_SQLContext.Reward_Table_Name;
 
         public async Task AddAsync(Quest_Reward model) => Add(model, this.tableName, EssentialDB);
         public async Task DeleteAsync(int id) => DeleteById(id, this.tableName, EssentialDB);
@@ -58,7 +58,7 @@ namespace efto_model.Repositories.Quests
 
         public async Task UpdateAsync(Quest_Reward model)
         {
-            string[] propertyNames = new[] { nameof(Quest_Reward.Reward), nameof(Quest_Reward.Category), nameof(Quest_Reward.UnlockTypeEnum) };
+            string[] propertyNames = new[] { nameof(Quest_Reward.Reward), nameof(Quest_Reward.Category), nameof(Quest_Reward.UnlockType) };
             UpdateById(model, GetProperties(model, propertyNames), this.tableName, EssentialDB);
         }
     }

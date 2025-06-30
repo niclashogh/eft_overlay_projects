@@ -19,7 +19,6 @@
                     <ResourceDictionary Source="/Views/ResourceDictionaries/Setting_Home.xaml"/>
                 </ResourceDictionary.MergedDictionaries>
 
-                <converters:TextReplaceUnderscore x:Key="TextReplaceUnderScore"/>
                 <converters:ImageSourceConverter x:Key="ImageSourceConverter"/>
             </ResourceDictionary>
         </Grid.Resources>
@@ -48,7 +47,7 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
 
-                    <TextBlock Text="{Binding Mode=OneWay, Converter={StaticResource TextReplaceUnderScore}}"
+                    <TextBlock Text="{Binding Name, Mode=OneWay}"
                                FontSize="20"/>
 
                 </DataTemplate>
@@ -70,7 +69,7 @@
                 <StackPanel HorizontalAlignment="Center"
                             VerticalAlignment="Center">
 
-                    <TextBlock Text="{Binding SelectedMap, Mode=OneWay, Converter={StaticResource TextReplaceUnderScore}}"
+                    <TextBlock Text="{Binding SelectedMap.Name, Mode=OneWay}"
                                HorizontalAlignment="Center"
                                FontSize="40"
                                Margin="0,0,0,10"/>

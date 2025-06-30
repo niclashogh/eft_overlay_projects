@@ -1,7 +1,4 @@
-﻿using efto_model.Models;
-using efto_model.Models.Base;
-using efto_model.Models.Enums;
-using efto_model.Models.Extractions;
+﻿using efto_model.Models.Extractions;
 using efto_model.Services;
 using SQLite;
 
@@ -11,36 +8,11 @@ namespace efto_model.Data.Tables
     {
         public Extraction_Table(string database)
         {
-            List<SQLProperty> types = new List<SQLProperty>
-            {
-                new(nameof(Extraction_Type.Type), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.PrimaryKey)
-            };
-            string typeQuery = DBQueryBuilder.CreateTable(types, nameof(Extraction_Type));
-
-            List<SQLProperty> extractions = new List<SQLProperty>
-            {
-                new(nameof(Extraction.Id), SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKey),
-                new(nameof(Extraction.Name), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.NotNull),
-                new(nameof(Extraction.Type), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.ForeignKey, (nameof(Extraction_Type), nameof(Extraction_Type.Type))),
-                new(nameof(Extraction.MapName), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.ForeignKey, (nameof(Map), nameof(Map.Name))),
-                new(nameof(Extraction.X), SQLPropertyTypes.DOUBLE, SQLPropertyNotations.NotNull),
-                new(nameof(Extraction.Y), SQLPropertyTypes.DOUBLE, SQLPropertyNotations.NotNull)
-            };
-            string extractionQuery = DBQueryBuilder.CreateTable(extractions, nameof(Extraction));
-
-            List<SQLProperty> requirements = new List<SQLProperty>
-            {
-                new(nameof(Extraction_Requirement.Id), SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKey),
-                new(nameof(Extraction_Requirement.ExtractionId), SQLPropertyTypes.INTEGER, SQLPropertyNotations.ForeignKey, new(nameof(Extraction), nameof(Extraction.Id))),
-                new(nameof(Extraction_Requirement.Requirement), SQLPropertyTypes.VARCHAR, SQLPropertyNotations.NotNull)
-            };
-            string requirementQuery = DBQueryBuilder.CreateTable(requirements, nameof(Extraction_Requirement));
-
             using (SQLiteConnection db = SQLCreateTable(database))
             {
-                db.Execute(typeQuery);
-                db.Execute(extractionQuery);
-                db.Execute(requirementQuery);
+                db.Execute(DBQueryBuilder.CreateTable(Extraction_SQLContext.Type_Table, Extraction_SQLContext.Type_Table_Name));
+                db.Execute(DBQueryBuilder.CreateTable(Extraction_SQLContext.Extraction_Table, Extraction_SQLContext.Extraction_Table_Name));
+                db.Execute(DBQueryBuilder.CreateTable(Extraction_SQLContext.Requirement_Table, Extraction_SQLContext.Requirement_Table_Name));
             }
 
             PopulateDefault(database);

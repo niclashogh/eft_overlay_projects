@@ -13,14 +13,12 @@ using efto_window.Views.ComponentBuilders;
 using System.Numerics;
 using Microsoft.UI.Input;
 using efto_window.Services;
-using Windows.UI;
 using efto_model.Models;
 using System.Threading.Tasks;
 using efto_model.Models.Extractions;
 using efto_model.Models.Quests;
 using efto_model.Models.Base;
 using efto_model.Records;
-using efto_model.Interfaces;
 
 namespace efto_window.Views.Windows
 {
@@ -38,7 +36,7 @@ namespace efto_window.Views.Windows
         private DimensionRecord<uint> rawImageSize;
         private double rawImageRatio;
 
-        private Draggable_Objects selectedDraggableObject;
+        private ImageFolders selectedDraggableObject;
         private bool isDraggingObject = false;
         private Point initialMousePosition;
         #endregion
@@ -82,7 +80,7 @@ namespace efto_window.Views.Windows
 
             // Map events
             this.MAP_INNER_CANVAS.PointerWheelChanged += (sender, e) => ScrollEventController<Canvas>(sender, e);
-            this.MAP_INNER_CANVAS.PointerPressed += (sender, e) => CaptureEventController<Canvas>(sender, e, Draggable_Objects.Map);
+            this.MAP_INNER_CANVAS.PointerPressed += (sender, e) => CaptureEventController<Canvas>(sender, e, ImageFolders.Maps);
             this.MAP_INNER_CANVAS.PointerMoved += (sender, e) => MoveEventController<Canvas>(sender, e);
             this.MAP_INNER_CANVAS.PointerReleased += (sender, e) => ReleaseEventController<Canvas>(sender, e);
         }
@@ -96,7 +94,7 @@ namespace efto_window.Views.Windows
 
                 if (parent != null)
                 {
-                    FrameworkElement? shape = FrameworkElementService.FindChildByTag(parent, "MARKER_ICON");
+                    FrameworkElement? shape = FrameworkElementService.FindChildByTag(parent, "MARKER_ELEMENT");
 
                     if (shape != null)
                     {
@@ -123,7 +121,7 @@ namespace efto_window.Views.Windows
 
         private async void OnMapChanged()
         {
-            this.rawImageSize = await ImageService.GetDimensions(ImageFolders.Maps, this.viewModel.SelectedMap.ToString());
+            this.rawImageSize = await ImageService.GetDimensions(ImageFolders.Maps, this.viewModel.SelectedMap.Name);
             this.rawImageRatio = (double)rawImageSize.Width / (double)rawImageSize.Height;
 
             ResetImageCanvas();
@@ -196,7 +194,7 @@ namespace efto_window.Views.Windows
         #region Create POIs
         private async Task CreateExtractions()
         {
-            if (this.viewModel.Extractions != null && this.viewModel.Extractions.Count > 0)
+            if (this.viewModel.Extractions.Count > 0)
             {
                 foreach(Extraction_DTO extraction in this.viewModel.Extractions)
                 {
@@ -204,7 +202,7 @@ namespace efto_window.Views.Windows
 
                     if (this.viewModel.IsRunningAsAdminstrator())
                     {
-                        component.GRID.PointerPressed += (sender, e) => CaptureEventController<Grid>(sender, e, Draggable_Objects.Extraction);
+                        component.GRID.PointerPressed += (sender, e) => CaptureEventController<Grid>(sender, e, ImageFolders.Extractions);
                         component.GRID.PointerMoved += (sender, e) => MoveEventController<Grid>(sender, e);
                         component.GRID.PointerReleased += (sender, e) => ReleaseEventController<Grid>(sender, e);
                     }
@@ -222,25 +220,18 @@ namespace efto_window.Views.Windows
 
         private async Task CreateTasks()
         {
-            if (this.viewModel.Tasks != null && this.viewModel.Tasks.Count > 0)
+            if (this.viewModel.Tasks.Count > 0)
             {
-                int colorIndex = 0;
-                int prevQuestId = this.viewModel.Tasks.First().QuestId;
+                //int colorIndex = 0;
+                //int prevQuestId = this.viewModel.Tasks.First().QuestId;
 
                 foreach(Quest_Task task in this.viewModel.Tasks)
                 {
-                    if (task.QuestId != prevQuestId && colorIndex < Color_DTO.Colors.Count - 1)
-                    {
-                        prevQuestId = task.QuestId;
-                        colorIndex++;
-                    }
+                    TaskComponent component = new(task);
 
-                    Color componentColor = Color.FromArgb(255, Color_DTO.Colors[colorIndex].R, Color_DTO.Colors[colorIndex].B, Color_DTO.Colors[colorIndex].G);
-                    TaskComponent component = new(task, componentColor);
-
-                    if (task.DP == Dragging_Privileges.Everyone || this.viewModel.IsRunningAsAdminstrator())
+                    if (this.viewModel.IsRunningAsAdminstrator())
                     {
-                        component.GRID.PointerPressed += (sender, e) => CaptureEventController<Grid>(sender, e, Draggable_Objects.QuestTask);
+                        component.GRID.PointerPressed += (sender, e) => CaptureEventController<Grid>(sender, e, ImageFolders.Quests);
                         component.GRID.PointerMoved += (sender, e) => MoveEventController<Grid>(sender, e);
                         component.GRID.PointerReleased += (sender, e) => ReleaseEventController<Grid>(sender, e);
                     }
@@ -258,15 +249,15 @@ namespace efto_window.Views.Windows
 
         private async Task CreateBTRs()
         {
-            if (this.viewModel.BTR != null && this.viewModel.BTR.Count > 0)
+            if (this.viewModel.BTR.Count > 0)
             {
                 foreach(BTR btr in this.viewModel.BTR)
                 {
                     BTRComponent component = new(btr);
 
-                    if (btr.DP == Dragging_Privileges.Everyone || this.viewModel.IsRunningAsAdminstrator())
+                    if (this.viewModel.IsRunningAsAdminstrator())
                     {
-                        component.GRID.PointerPressed += (sender, e) => CaptureEventController<Grid>(sender, e, Draggable_Objects.BTR);
+                        component.GRID.PointerPressed += (sender, e) => CaptureEventController<Grid>(sender, e, ImageFolders.BTR);
                         component.GRID.PointerMoved += (sender, e) => MoveEventController<Grid>(sender, e);
                         component.GRID.PointerReleased += (sender, e) => ReleaseEventController<Grid>(sender, e);
                     }
@@ -284,15 +275,15 @@ namespace efto_window.Views.Windows
 
         private async Task CreateMarkers()
         {
-            if (this.viewModel.Markers != null && this.viewModel.Markers.Count > 0)
+            if (this.viewModel.Markers.Count > 0)
             {
                 foreach(Marker marker in this.viewModel.Markers)
                 {
                     MarkerComponent component = new(marker, OnSliderChanged);
 
-                    if (marker.DP == Dragging_Privileges.Everyone || this.viewModel.IsRunningAsAdminstrator())
+                    if (this.viewModel.IsRunningAsAdminstrator())
                     {
-                        component.GRID.PointerPressed += (sender, e) => CaptureEventController<Grid>(sender, e, Draggable_Objects.Marker);
+                        component.GRID.PointerPressed += (sender, e) => CaptureEventController<Grid>(sender, e, ImageFolders.Markers);
                         component.GRID.PointerMoved += (sender, e) => MoveEventController<Grid>(sender, e);
                         component.GRID.PointerReleased += (sender, e) => ReleaseEventController<Grid>(sender, e);
                     }
@@ -339,7 +330,7 @@ namespace efto_window.Views.Windows
             }
         }
 
-        private async void CaptureEventController<T>(object sender, PointerRoutedEventArgs e, Draggable_Objects dragging) where T : FrameworkElement
+        private async void CaptureEventController<T>(object sender, PointerRoutedEventArgs e, ImageFolders dragging) where T : FrameworkElement
         {
             if (sender is T frameworkElement && frameworkElement != null)
             {
@@ -386,33 +377,33 @@ namespace efto_window.Views.Windows
                         double centerPercentageY = (Canvas.GetTop(frameworkElement) + this.MAP_TRANSFORM.CenterY) / this.MAP_INNER_CANVAS.Height;
                         PositionRecord<double, double> position = new(centerPercentageX, centerPercentageY);
 
-                        if (this.selectedDraggableObject == Draggable_Objects.Extraction)
+                        if (this.selectedDraggableObject == ImageFolders.Extractions)
                         {
                             Extraction extraction = new(position);
                             extraction.Id = id;
 
                             _ = this.viewModel.UpdateExtraction(extraction);
                         }
-                        else if (this.selectedDraggableObject == Draggable_Objects.QuestTask)
+                        else if (this.selectedDraggableObject == ImageFolders.Quests)
                         {
                             Quest_Task task = new(position);
                             task.Id = id;
 
                             _ = this.viewModel.UpdateQuestTask(task);
                         }
-                        else if (this.selectedDraggableObject == Draggable_Objects.BTR)
+                        else if (this.selectedDraggableObject == ImageFolders.BTR)
                         {
                             BTR btr = new(position);
                             btr.Id = id;
 
                             _ = this.viewModel.UpdateBTR(btr);
                         }
-                        else if (this.selectedDraggableObject == Draggable_Objects.Marker)
+                        else if (this.selectedDraggableObject == ImageFolders.Markers)
                         {
                             Marker marker = new(position);
                             marker.Id = id;
 
-                            _ = this.viewModel.UpdateMarkerSize(marker);
+                            _ = this.viewModel.UpdateMarkerCoordinates(marker);
                         }
                     }
                 }

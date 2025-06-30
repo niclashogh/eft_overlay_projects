@@ -1,4 +1,6 @@
 ﻿using efto_model.Interfaces;
+using efto_model.Models.Base;
+using efto_model.Models.Enums;
 using efto_model.Records;
 using efto_model.Services;
 
@@ -35,5 +37,22 @@ namespace efto_model.Models.Quests
         }
 
         public Quest_Task() { }
+    }
+
+    public static partial class Quest_SQLContext
+    {
+        public static string Task_Table_Name { get; } = "Quest_Task";
+
+        public static List<SQLProperty> Task_Table { get; } = new List<SQLProperty>
+        {
+            new("Id", SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKeyId),
+            new("MapName", SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.ForeignKey, new(nameof(Map), nameof(Map.Name))),
+            new("TraderName", SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.ForeignKey, new(nameof(Trader), nameof(Trader.Name))),
+            new("QuestId", SQLPropertyTypes.INTEGER, SQLPropertyNotations.ForeignKey, new(nameof(Quest), nameof(Quest.Id))),
+            new("Desc", SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.NotNull),
+            new("Sequence", SQLPropertyTypes.INTEGER, SQLPropertyNotations.NotNull),
+            new("X", SQLPropertyTypes.DOUBLE, SQLPropertyNotations.NotNull),
+            new("Y", SQLPropertyTypes.DOUBLE, SQLPropertyNotations.NotNull)
+        };
     }
 }

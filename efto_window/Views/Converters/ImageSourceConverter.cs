@@ -1,4 +1,5 @@
-﻿using efto_model.Models.Base;
+﻿using efto_model.Data;
+using efto_model.Models.Enums;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
@@ -9,33 +10,23 @@ namespace efto_window.Views.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (parameter is string)
+            if (value is string image && !string.IsNullOrEmpty(image))
             {
-                if (value is Map)
+                if (parameter is string folder && !string.IsNullOrEmpty(folder))
                 {
-                    string? imageName = value.ToString();
-                    string? folderPath = parameter.ToString();
-
-                    if (!string.IsNullOrEmpty(imageName) && !string.IsNullOrEmpty(folderPath))
+                    if (folder == "Maps")
                     {
-                        return new BitmapImage(new Uri($"ms-appdata://{folderPath}{imageName}.png")); // Expecting "Local/Maps/image.png"
+                        return new BitmapImage(new Uri($"{AssetContext.ApplicationFolder}/{ImageFolders.Maps.ToString()}/{image}.png"));
                     }
-                    else throw new Exception("[ImageSourceConverter] BindableValue or ConverterParameter is null or empty");
-                }
-                else if (value is Trader)
-                {
-                    string? imageName = value.ToString();
-                    string? folderPath = parameter.ToString();
-
-                    if (!string.IsNullOrEmpty(imageName) && !string.IsNullOrEmpty(folderPath))
+                    else if (folder == "Traders")
                     {
-                        return $"{folderPath}{imageName}.png"; // Expecting "Assets/Traders/image.png"
+                        return new BitmapImage(new Uri($"{AssetContext.ApplicationFolder}/{ImageFolders.Traders.ToString()}/{image}.png"));
                     }
-                    else throw new Exception("[ImageSourceConverter] BindableValue or ConverterParameter is null or empty");
+                    else return value;
                 }
-                else throw new Exception("[ImageSourceConverter] BindableValue not regonized as Map or Trader");
+                else return value;
             }
-            else throw new Exception("[ImageSourceConverter] ConverterParameter not regonized as an string");
+            else return value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

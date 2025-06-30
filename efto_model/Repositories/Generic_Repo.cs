@@ -300,7 +300,7 @@ namespace efto_model.Repositories
                     db.Execute(query, property.value);
                 }
             }
-            catch (Exception e) { Debug.WriteLine("Generic_Repo.DeleteAllById: " + e); }
+            catch (Exception e) { Debug.WriteLine("Generic_Repo.DeleteAllByKey: " + e); }
         }
     }
 }
