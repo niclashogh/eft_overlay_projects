@@ -1,4 +1,5 @@
 ﻿using efto_model.Models.AccessKeys;
+using System.Collections.ObjectModel;
 
 namespace efto_model.Repositories.AccessKeys
 {
@@ -10,6 +11,8 @@ namespace efto_model.Repositories.AccessKeys
         public async Task DeleteAsync(int id) => DeleteById(id, this.tableName, EssentialDB);
         public async Task<AccessKey_Loot_Type> LoadSingleAsync(int id) => LoadSingleById<AccessKey_Loot_Type>(id, this.tableName, EssentialDB);
         public async Task<AccessKey_Loot_Type> LoadLastAsync() => LoadLastById<AccessKey_Loot_Type>(this.tableName, EssentialDB);
+
+        public async Task<ObservableCollection<AccessKey_Loot_Type>> LoadAllAsync() => LoadAll<AccessKey_Loot_Type>(this.tableName, EssentialDB);
 
         public async Task UpdateAsync(AccessKey_Loot_Type model)
         {

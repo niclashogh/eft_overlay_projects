@@ -12,16 +12,18 @@ namespace efto_model.Models.AccessKeys
         public int Id { get; set; }
         public string Name { get; set; }
         public string MapName { get; set; }
+        public string Icon {  get; set; }
 
         public double X { get; set; }
         public double Y { get; set; }
 
         public bool Show { get; set; }
 
-        public AccessKey(string name, string mapName) : this(new PositionRecord<double, double>(.5, .5))
+        public AccessKey(string name, string icon, string mapName) : this(new PositionRecord<double, double>(.5, .5))
         {
             this.Name = name;
             this.MapName = mapName;
+            this.Icon = icon;
 
             this.Show = false;
         }
@@ -49,6 +51,7 @@ namespace efto_model.Models.AccessKeys
             new("Id", SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKeyId),
             new("Name", SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.NotNull),
             new("MapName", SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.ForeignKey, new(nameof(Map), nameof(Map.Name))),
+            new("Icon", SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.ForeignKey, new(nameof(AccessKey_Icon), nameof(AccessKey_Icon.Icon))),
             new("X", SQLPropertyTypes.DOUBLE, SQLPropertyNotations.NotNull),
             new("Y", SQLPropertyTypes.DOUBLE, SQLPropertyNotations.NotNull),
             new("Show", SQLPropertyTypes.BIT, SQLPropertyNotations.NotNull)

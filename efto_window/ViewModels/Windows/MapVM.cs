@@ -3,14 +3,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using efto_model.Interfaces;
-using efto_model.Models;
 using efto_model.Models.Base;
 using efto_model.Models.Extractions;
+using efto_model.Models.Markers;
 using efto_model.Models.Quests;
 using efto_model.Records;
-using efto_model.Repositories;
 using efto_model.Repositories.Base;
 using efto_model.Repositories.Extractions;
+using efto_model.Repositories.Markers;
 using efto_model.Repositories.Quests;
 
 namespace efto_window.ViewModels.Windows

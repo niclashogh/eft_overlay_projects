@@ -5,6 +5,7 @@
         PrimaryKeyId,
         PrimaryKeyName,
         ForeignKey,
+        Unique,
         NotNull,
         Nullable
     }

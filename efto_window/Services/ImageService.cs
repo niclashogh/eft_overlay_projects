@@ -39,6 +39,11 @@ namespace efto_window.Services
         {
             string folderPath = Path.Combine(AssetContext.ApplicationFolder, folder.ToString());
 
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
             if (Directory.Exists(folderPath))
             {
                 Process.Start(new ProcessStartInfo
@@ -88,7 +93,7 @@ namespace efto_window.Services
                 if (file != null)
                 {
                     BasicProperties properties = await file.GetBasicPropertiesAsync();
-                    return $"Last updated: {properties.DateModified.DateTime.ToString()}";
+                    return $"{properties.DateModified.DateTime.ToString()}";
                 }
                 else return "No image is available.";
             }

@@ -1,4 +1,4 @@
 ﻿namespace efto_model.Records
 {
-    public readonly record struct MetaDataRecord(string Creator, string Version, string UpdatedToGameVersion);
+    public readonly record struct MetaDataRecord(string Creator, string Version);
 }

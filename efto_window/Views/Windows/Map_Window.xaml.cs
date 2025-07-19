@@ -13,12 +13,12 @@ using efto_window.Views.ComponentBuilders;
 using System.Numerics;
 using Microsoft.UI.Input;
 using efto_window.Services;
-using efto_model.Models;
 using System.Threading.Tasks;
 using efto_model.Models.Extractions;
 using efto_model.Models.Quests;
 using efto_model.Models.Base;
 using efto_model.Records;
+using efto_model.Models.Markers;
 
 namespace efto_window.Views.Windows
 {

@@ -8,7 +8,7 @@ namespace efto_window.ViewModels
     public class WindowVM : NotifyChangedService
     {
         #region Variables & Properties
-        public MetaDataRecord MetaData { get; } = new("MADE BY Grannice", "VERSION 0.9", "EFT 0.15");
+        public MetaDataRecord MetaData { get; } = new("MADE BY Grannice", "VERSION 0.9");
 
         private bool disableNavigation = false;
         public bool DisableNavigation

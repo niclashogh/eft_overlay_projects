@@ -24,9 +24,10 @@ namespace efto_model.Services
                 string notation = property.Notation switch
                 {
                     SQLPropertyNotations.PrimaryKeyId => " PRIMARY KEY AUTOINCREMENT",
-                    SQLPropertyNotations.PrimaryKeyName => "PRIMARY KEY",
+                    SQLPropertyNotations.PrimaryKeyName => " PRIMARY KEY",
+                    SQLPropertyNotations.Unique => " NOT NULL UNIQUE",
                     SQLPropertyNotations.NotNull => " NOT NULL",
-                    _ => "" // Nullable & ForeignKey has not end-notations
+                    _ => "" // Nullable & ForeignKey has no end-notations
                 };
 
                 columnDefinitions.Add($"{property.Name} {type}{notation}"); //Note: Missing space between {type} and {notation} is correct
@@ -61,10 +62,10 @@ namespace efto_model.Services
             return $"UPDATE {tableName} SET {columns} WHERE Id = ?";
         }
 
-        public static string UpdateByKey(List<PropertyInfo> properties, string propertyName, string tableName)
+        public static string UpdateByKey(List<PropertyInfo> properties, string key, string tableName)
         {
             string columns = string.Join(", ", properties.Select(property => property.Name + " = ?"));
-            return $"UPDATE {tableName} SET {columns} WHERE {propertyName} = ?";
+            return $"UPDATE {tableName} SET {columns} WHERE {key} = ?";
         }
 
         public static string DeleteById(string tableName) => $"DELETE FROM {tableName} WHERE Id = ?";

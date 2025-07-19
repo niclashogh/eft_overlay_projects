@@ -4,13 +4,14 @@ namespace efto_model.Models.Base
 {
     public class Map
     {
+        public int Id { get; set; }
         public string Name { get; set; }
 
-        public double? UpdatedToVersion { get; set; }
+        public string? UpdatedToVersion { get; set; }
 
-        public Map(string name, double updateToVersion) : this(updateToVersion) => this.Name = name;
+        public Map(string name, string updateToVersion) : this(updateToVersion) => this.Name = name;
 
-        public Map(double updateToVersion) => this.UpdatedToVersion = updateToVersion;
+        public Map(string updateToVersion) => this.UpdatedToVersion = updateToVersion;
 
         public Map() { }
     }
@@ -21,8 +22,9 @@ namespace efto_model.Models.Base
 
         public static List<SQLProperty> Map_Table { get; } = new List<SQLProperty>
         {
-            new("Name", SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.PrimaryKeyName),
-            new("UpdatedToVersion", SQLPropertyTypes.DOUBLE, SQLPropertyNotations.Nullable)
+            new("Id", SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKeyId),
+            new("Name", SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.Unique),
+            new("UpdatedToVersion", SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.Nullable)
         };
     }
 }

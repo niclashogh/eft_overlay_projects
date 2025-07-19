@@ -12,6 +12,7 @@ namespace efto_model.Data.Tables
             {
                 db.Execute(DBQueryBuilder.CreateTable(Extraction_SQLContext.Type_Table, Extraction_SQLContext.Type_Table_Name));
                 db.Execute(DBQueryBuilder.CreateTable(Extraction_SQLContext.Extraction_Table, Extraction_SQLContext.Extraction_Table_Name));
+
                 db.Execute(DBQueryBuilder.CreateTable(Extraction_SQLContext.Requirement_Table, Extraction_SQLContext.Requirement_Table_Name));
             }
 

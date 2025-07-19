@@ -4,6 +4,7 @@ namespace efto_model.Models.AccessKeys
 {
     public class AccessKey_Loot_Type
     {
+        public int Id { get; set; }
         public string Type { get; set; }
 
         public AccessKey_Loot_Type(string type) => this.Type = type;
@@ -17,7 +18,8 @@ namespace efto_model.Models.AccessKeys
 
         public static List<SQLProperty> Type_Table { get; } = new List<SQLProperty>
         {
-            new("Type", SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.PrimaryKeyName)
+            new("Id", SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKeyId),
+            new("Type", SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.Unique)
         };
     }
 }

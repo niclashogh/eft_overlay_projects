@@ -88,8 +88,6 @@
                         <TextBox Text="{Binding MetaData.Version, Mode=OneTime}"
                                  IsEnabled="False"/>
 
-                        <TextBox Text="{Binding MetaData.UpdatedToGameVersion, Mode=OneTime}"
-                                 IsEnabled="False"/>
                     </StackPanel>
                 </Grid>
 

@@ -18,6 +18,8 @@ namespace efto.Services
         private int screenWidth { get; set; }
         private int screenHeight { get; set; }
 
+        private bool isTopMost { get; set; } = false;
+
         public DimensionRecord<int> ScreenResolution
         {
             get { return new(this.screenWidth, this.screenHeight); }
@@ -72,12 +74,13 @@ namespace efto.Services
             [DllImport("user32.dll", SetLastError = true)]
             static extern bool SetWindowPos(nint hWnd, int hWndInsertAfter, int x, int y, int cs, int cy, uint uFlags);
 
-            const int HWND_TOPMOST = -1;
+            int HWND_TOPMOST = this.isTopMost ? -2 : -1;
             const uint SWP_NOSIZE = 0x0001;
             const uint SWP_NOMOVE = 0x0002;
             const uint TOPMOST_FLAGS = SWP_NOSIZE | SWP_NOMOVE;
 
             SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
+            this.isTopMost = !this.isTopMost;
         }
 
         internal void DisableDrag(AppWindow appWindow) => appWindow.TitleBar.SetDragRectangles(new RectInt32[] { new(0, 0, 0, 0) });

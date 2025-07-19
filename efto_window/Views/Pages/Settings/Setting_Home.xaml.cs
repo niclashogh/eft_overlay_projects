@@ -24,18 +24,11 @@ namespace efto_window.Views.Pages.Settings
     public sealed partial class Setting_Home : Page
     {
         private Setting_HomeVM viewModel { get; set; } = new();
-        private nint windowHandle;
 
-        public Setting_Home(nint windowHandle)
+        public Setting_Home()
         {
             this.InitializeComponent();
-            this.windowHandle = windowHandle;
             this.HOME_GRID.DataContext = viewModel;
         }
-
-        private void ImportMaps_Click(object sender, RoutedEventArgs e) => ImageService.PickImage(ImageFolders.Maps, this.windowHandle);
-
-        private void OpenMapsFolder_Click(object sender, RoutedEventArgs e) => ImageService.OpenAssestsFolder(ImageFolders.Maps);
-
     }
 }

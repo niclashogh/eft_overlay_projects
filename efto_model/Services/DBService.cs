@@ -38,7 +38,6 @@ namespace efto_model.Services
             {
                 using (SQLiteConnection db = SQLCreateDB(database)) { }
 
-                Quest_Table quest = new(database);
                 Marker_Table marker = new(database);
             }
         }

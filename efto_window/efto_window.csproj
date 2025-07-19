@@ -16,6 +16,16 @@
     <None Remove="Assets\Backgrounds\Settings.png" />
     <None Remove="Assets\Natives\Arrow.png" />
     <None Remove="Assets\Natives\Plus.png" />
+    <None Remove="Views\Pages\Settings\Setting_AccessKey.xaml" />
+    <None Remove="Views\Pages\Settings\Setting_AccessKey_Loot.xaml" />
+    <None Remove="Views\Pages\Settings\Setting_BTR.xaml" />
+    <None Remove="Views\Pages\Settings\Setting_Extraction.xaml" />
+    <None Remove="Views\Pages\Settings\Setting_Map.xaml" />
+    <None Remove="Views\Pages\Settings\Setting_Marker.xaml" />
+    <None Remove="Views\Pages\Settings\Setting_Quest.xaml" />
+    <None Remove="Views\Pages\Settings\Setting_Quest_Reward_Category.xaml" />
+    <None Remove="Views\Pages\Settings\Setting_Trader.xaml" />
+    <None Remove="Views\ResourceDictionaries\Setting_Subpage.xaml" />
     <None Remove="Views\ResourceDictionaries\WindowMenu.xaml" />
     <None Remove="Views\Windows\Browser_Window.xaml" />
     <None Remove="Views\Windows\Map_Window.xaml" />
@@ -51,6 +61,56 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\efto_model\efto_model.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\Settings\Setting_Quest_Reward_Category.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\Settings\Setting_AccessKey_Loot.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\Settings\Setting_AccessKey.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\Settings\Setting_Quest.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\Settings\Setting_BTR.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\ResourceDictionaries\Setting_Subpage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\Settings\Setting_Marker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\Settings\Setting_Extraction.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\Settings\Setting_Trader.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\Settings\Setting_Map.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\ResourceDictionaries\Setting_Home.xaml">

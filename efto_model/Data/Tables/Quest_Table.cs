@@ -11,10 +11,15 @@ namespace efto_model.Data.Tables
             using (SQLiteConnection db = SQLCreateTable(database))
             {
                 db.Execute(DBQueryBuilder.CreateTable(Quest_SQLContext.Quest_Table, Quest_SQLContext.Quest_Table_Name));
+
                 db.Execute(DBQueryBuilder.CreateTable(Quest_SQLContext.Requirement_Table, Quest_SQLContext.Requirement_Table_Name));
+
                 db.Execute(DBQueryBuilder.CreateTable(Quest_SQLContext.Reward_Category_Table, Quest_SQLContext.Reward_Category_Table_Name));
                 db.Execute(DBQueryBuilder.CreateTable(Quest_SQLContext.Reward_Table, Quest_SQLContext.Reward_Table_Name));
+
                 db.Execute(DBQueryBuilder.CreateTable(Quest_SQLContext.Task_Table, Quest_SQLContext.Task_Table_Name));
+                db.Execute(DBQueryBuilder.CreateTable(Quest_SQLContext.Task_Icon_Table, Quest_SQLContext.Task_Icon_Table_Name));
+
                 db.Execute(DBQueryBuilder.CreateTable(Quest_SQLContext.Quest_RequiredByQuest_JunctionTable, Quest_SQLContext.Quest_RequiredByQuest_JunctionTable_Name));
                 db.Execute(DBQueryBuilder.CreateTable(Quest_SQLContext.Quest_MultiChoice_JunctionTable, Quest_SQLContext.Quest_MultiChoice_JunctionTable_Name));
             }

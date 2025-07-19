@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="efto_window.Views.Pages.Settings.Setting_Marker"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:efto_window.Views.Pages.Settings"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:efto_window.Views.Converters"
+    mc:Ignorable="d"
+    Background="Transparent">
+
+    <Grid Name="SETTING_MARKER_GRID"
+          Margin="0,0,0,10">
+
+        <!--#region Resources & Layout-->
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="/Views/ResourceDictionaries/Setting_Subpage.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+
+                <converters:ImageSourceConverter x:Key="ImageSourceConverter"/>
+            </ResourceDictionary>
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <!--#endregion-->
+
+        <!--#region Header, Row 0-->
+        <Border Grid.Row="0"
+                Style="{StaticResource HEADER_BORDER}">
+
+            <TextBlock Text="MARKERS"
+                       Style="{StaticResource HEADER_TEXT}"/>
+
+        </Border>
+        <!--#endregion-->
+
+        <Border Grid.Row="1"
+                Style="{StaticResource CONTENT_BORDER}">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!--#region Assets Buttons, Column 2-->
+                <StackPanel Grid.Column="2"
+                            Style="{StaticResource ASSETS_STACKPANEL}">
+
+                    <Button Content="IMPORT ICONS"
+                            Style="{StaticResource ASSETS_BTN}"
+                            Click="Import_Click"/>
+
+                    <Button Content="OPEN ASSETS"
+                            Style="{StaticResource ASSETS_BTN}"
+                            Click="OpenFolder_Click"/>
+
+                </StackPanel>
+                <!--#endregion-->
+
+                <!--#region Selection, Column 0-->
+                <ListBox Grid.Column="0"
+                         ItemsSource="{Binding Icons, Mode=TwoWay}"
+                         SelectedItem="{Binding SelectedIcon, Mode=TwoWay}"
+                         HorizontalAlignment="Left"
+                         Width="200">
+
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"
+                                        Background="#141414"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+
+                            <TextBlock Text="{Binding Icon, Mode=OneWay}"
+                                       FontSize="20"/>
+
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+                <!--#endregion-->
+
+                <!--#region Information, Column 1-->
+                <StackPanel Grid.Column="1"
+                            Style="{StaticResource INFORMATION_STACKPANEL}">
+
+                    <TextBox Text="{Binding SelectedIcon.Icon, Mode=TwoWay}"
+                             IsEnabled="{Binding AnyIcons, Mode=OneWay}"
+                             PlaceholderText="Marker Icon"
+                             FontSize="40"/>
+
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Margin="0,20,0,0">
+
+                        <TextBlock Text="IMAGE, LAST UPDATED"
+                                   FontWeight="Bold"/>
+
+                        <TextBlock Text="{Binding IconDateFeedback, Mode=OneWay}"
+                                   HorizontalAlignment="Center"
+                                   Margin="5,0,0,0"/>
+
+                    </StackPanel>
+
+                </StackPanel>
+                <!--#endregion-->
+
+                <!--#region Editing Buttons, Column 1-->
+                <StackPanel Grid.Column="1"
+                            Style="{StaticResource EDITING_STACKPANEL}">
+
+                    <Button Style="{StaticResource UPDATE_BTN}"
+                            IsEnabled="{Binding AnyIcons, Mode=OneWay}"
+                            Click="Update_Click"/>
+
+                    <Button Style="{StaticResource REMOVE_BTN}"
+                            IsEnabled="{Binding AnyIcons, Mode=OneWay}"
+                            Click="Remove_Click"/>
+
+                </StackPanel>
+                <!--#endregion-->
+            </Grid>
+            
+        </Border>
+
+        <!--#region Add new, Row 2-->
+        <Border Grid.Row="2"
+                Style="{StaticResource ADDNEW_BORDER}">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="1"
+                         Style="{StaticResource ADDNEW_TEXTBOX}"
+                         Text="{Binding NewMarkerIcon, Mode=TwoWay}"
+                         PlaceholderText="Marker Icon"/>
+
+                <Button Grid.Column="2"
+                        Style="{StaticResource ADDNEW_BTN}"
+                        Click="Add_Click"/>
+
+            </Grid>
+
+        </Border>
+        <!--#endregion-->
+    </Grid>
+</Page>

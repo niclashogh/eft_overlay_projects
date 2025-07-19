@@ -84,7 +84,7 @@ namespace efto_model.Repositories
         {
             try
             {
-                string query = DBQueryBuilder.UpdateById(properties, tableName);
+                string query = DBQueryBuilder.UpdateByKey(properties, key, tableName);
                 object?[] propertiesAsObject = properties.Select(property => property.GetValue(model)).ToArray();
 
                 if (propertiesAsObject != null || propertiesAsObject.Length > 0)

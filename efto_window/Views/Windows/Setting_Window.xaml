@@ -63,14 +63,19 @@
                     <StackPanel Orientation="Vertical"
                                 Grid.Row="1">
 
+                        <Button HorizontalAlignment="Center"
+                                Content="Toggle Topmost"
+                                FontWeight="Bold"
+                                Background="YellowGreen"
+                                Margin="10"
+                                Click="ToggleTopMost_Click"/>
+
                         <TextBox Text="{Binding MetaData.Creator, Mode=OneTime}"
                                  IsEnabled="False"/>
 
                         <TextBox Text="{Binding MetaData.Version, Mode=OneTime}"
                                  IsEnabled="False"/>
-
-                        <TextBox Text="{Binding MetaData.UpdatedToGameVersion, Mode=OneTime}"
-                                 IsEnabled="False"/>
+                        
                     </StackPanel>
                 </Grid>
 

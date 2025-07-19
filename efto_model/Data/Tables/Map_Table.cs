@@ -22,16 +22,16 @@ namespace efto_model.Data.Tables
             {
                 List<Map> mapValues = new List<Map>
                 {
-                    new("Customs", 0),
-                    new("Factory", 0),
-                    new("Ground Zero", 0),
-                    new("Interchange", 0),
-                    new("Labs", 0),
-                    new("Lighthouse", 0),
-                    new("Reserve", 0),
-                    new("Shoreline", 0),
-                    new("Streets of Tarkov", 0),
-                    new("Woods", 0),
+                    new("Customs", "0"),
+                    new("Factory", "0"),
+                    new("Ground Zero", "0"),
+                    new("Interchange", "0"),
+                    new("Labs", "0"),
+                    new("Lighthouse", "0"),
+                    new("Reserve", "0"),
+                    new("Shoreline", "0"),
+                    new("Streets of Tarkov", "0"),
+                    new("Woods", "0"),
                 };
 
                 string insertQuery = $"INSERT INTO Map (Name, UpdatedToVersion) VALUES (?, ?)";

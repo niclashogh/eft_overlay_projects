@@ -30,5 +30,7 @@ namespace efto_window.Views.Windows
         private void Menu_Btn_Click(object sender, RoutedEventArgs e) => this.controller.Menu_Toggle(this.MENU_SPLITVIEW);
 
         private void Menu_SelectionChanged(object sender, SelectionChangedEventArgs e) => this.controller.Menu_SelectionChanged(sender, this.CONTENT_FRAME);
+
+        private void ToggleTopMost_Click(object sender, RoutedEventArgs e) => this.controller.SetTopMost(WindowNative.GetWindowHandle(this));
     }
 }

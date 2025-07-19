@@ -4,6 +4,7 @@ namespace efto_model.Models.Base
 {
     public class Trader
     {
+        public int Id { get; set; }
         public string Name { get; set; }
 
         public Trader(string name) => this.Name = name;
@@ -17,7 +18,8 @@ namespace efto_model.Models.Base
 
         public static List<SQLProperty> Trader_Trable { get; } = new List<SQLProperty>
         {
-            new("Name", SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.PrimaryKeyName)
+            new("Id", SQLPropertyTypes.INTEGER, SQLPropertyNotations.PrimaryKeyId),
+            new("Name", SQLPropertyTypes.nVARCHAR, SQLPropertyNotations.Unique)
         };
     }
 }

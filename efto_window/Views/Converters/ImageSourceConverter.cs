@@ -22,6 +22,10 @@ namespace efto_window.Views.Converters
                     {
                         return new BitmapImage(new Uri($"{AssetContext.ApplicationFolder}/{ImageFolders.Traders.ToString()}/{image}.png"));
                     }
+                    else if (folder == "Extractions")
+                    {
+                        return new BitmapImage(new Uri($"{AssetContext.ApplicationFolder}/{ImageFolders.Extractions.ToString()}/{image}.png"));
+                    }
                     else return value;
                 }
                 else return value;

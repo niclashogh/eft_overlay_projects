@@ -10,9 +10,12 @@ namespace efto_model.Data.Tables
         {
             using (SQLiteConnection db = SQLCreateTable(database))
             {
+                db.Execute(DBQueryBuilder.CreateTable(AccessKey_SQLContext.Icon_Table, AccessKey_SQLContext.Icon_Table_Name));
                 db.Execute(DBQueryBuilder.CreateTable(AccessKey_SQLContext.AccessKey_Table, AccessKey_SQLContext.AccessKey_Table_Name));
+
                 db.Execute(DBQueryBuilder.CreateTable(AccessKey_SQLContext.Type_Table, AccessKey_SQLContext.Type_Table_Name));
                 db.Execute(DBQueryBuilder.CreateTable(AccessKey_SQLContext.Loot_Table, AccessKey_SQLContext.Loot_Table_Name));
+
                 db.Execute(DBQueryBuilder.CreateTable(AccessKey_SQLContext.AccessKey_Quest_JunctionTable, AccessKey_SQLContext.AccessKey_Quest_JunctionTable_Name));
             }
 
@@ -42,11 +45,26 @@ namespace efto_model.Data.Tables
                     new("Rare"),
                 };
 
-                string insertQuery = $"INSERT INTO AccessKey_Loot_Type (Type) VALUES (?)";
+                string insertTypeQuery = $"INSERT INTO AccessKey_Loot_Type (Type) VALUES (?)";
 
                 foreach (AccessKey_Loot_Type type in typeValues)
                 {
-                    db.Execute(insertQuery, type.Type);
+                    db.Execute(insertTypeQuery, type.Type);
+                }
+
+                List<AccessKey_Icon> iconValues = new List<AccessKey_Icon>
+                {
+                    new("Keycard"),
+                    new("Marked Key"),
+                    new("Room Key"),
+                    new("Container Key")
+                };
+
+                string insertIconQuery = $"INSERT INTO AccessKey_Icon (Icon) VALUES (?)";
+
+                foreach (AccessKey_Icon icon in iconValues)
+                {
+                    db.Execute(insertIconQuery, icon.Icon);
                 }
             }
         }
